@@ -1,12 +1,11 @@
 import datetime
 
-import numpy as np
 import pandas as pd
 
-from basic_strategy import engine
-from basic_strategy.card_eval import card_eval
-from basic_strategy.hand import Hand
-from basic_strategy.mode_selector import deal_cards
+from src.basic_strategy import engine
+from src.basic_strategy.card_eval import card_eval
+from src.basic_strategy.hand import Hand
+from src.basic_strategy.mode_selector import deal_cards
 
 ENDC = "\033[0m"
 OKGREEN = "\033[92m"
@@ -18,9 +17,7 @@ if __name__ == "__main__":
     while True:
         dealt_cards = deal_cards(mode)
         hand, dealer = Hand(dealt_cards[0:2]), dealt_cards[2]
-        print(
-            f"Your hand: '{",".join([str(c) for c in hand.cards])}' | Dealer upcard: {dealer}"
-        )
+        print(f"Your hand: '{",".join([str(c) for c in hand.cards])}' | Dealer upcard: {dealer}")
         choice = input("Your choice: ")
         correct = card_eval(hand, dealer, mode)
         if choice == correct:
@@ -39,9 +36,7 @@ if __name__ == "__main__":
                 "card2": pd.Series([hand.cards[1].rank], dtype=pd.StringDtype()),
                 "hand_value": pd.Series([hand.value], dtype=pd.Int32Dtype()),
                 "dealer_card": pd.Series([dealer.value], dtype=pd.Int32Dtype()),
-                "upload_time": pd.Series(
-                    [datetime.datetime.now()], dtype="datetime64[ns]"
-                ),
+                "upload_time": pd.Series([datetime.datetime.now()], dtype="datetime64[ns]"),
             }
         )
         with engine.begin() as conn:

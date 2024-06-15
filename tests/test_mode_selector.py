@@ -1,7 +1,7 @@
 import pytest
 
-from basic_strategy import mode_selector
-from basic_strategy.hand import Card
+from src.basic_strategy import mode_selector
+from src.basic_strategy.hand import Card
 
 
 @pytest.mark.repeat(10**3)

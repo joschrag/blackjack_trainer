@@ -1,8 +1,6 @@
-from collections import Counter
-
 import pytest
 
-from basic_strategy.hand import Card, Hand
+from src.basic_strategy.hand import Card, Hand
 
 
 @pytest.mark.parametrize(
