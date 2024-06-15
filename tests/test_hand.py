@@ -20,5 +20,17 @@ from basic_strategy.hand import Card, Hand
 )
 def test_init_hand(cards: list[Card], value: int):
     hand = Hand(cards)
-    # assert Counter(hand.cards) == Counter(cards)
     assert hand.value == value
+
+
+@pytest.mark.parametrize(
+    "rank,value",
+    zip(
+        ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"],
+        [2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10, 11],
+    ),
+)
+@pytest.mark.parametrize("suit", ["s", "h", "c", "d"])
+def test_init_card(rank: str, suit: str, value: int):
+    card = Card(suit, rank)
+    assert card.value == value
