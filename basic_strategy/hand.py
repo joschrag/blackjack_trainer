@@ -1,5 +1,3 @@
-import itertools
-
 CARD_VALS: dict = {
     "2": 2,
     "3": 3,
@@ -51,9 +49,3 @@ class Hand:
                 return val + 11 + len(aces) - 1
             return val + len(aces)
         return naive_val
-
-
-suits = ["h", "c", "s", "d"]
-ranks = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
-
-deck = [Card(s, r) for s, r in itertools.product(suits, ranks)]
