@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "basic-strategy"
+version = "0.1.0"
+description = ""
+authors = ["jonas.schrage <119843859+joschrag@users.noreply.github.com>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pandas = "^2.2.2"
+matplotlib = "^3.9.0"
+plotly = "^5.22.0"
+sqlalchemy = "^2.0.30"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest-repeat = "^0.9.3"
+pytest = "^8.2.2"
+black = "^24.4.2"
+mypy = "^1.10.0"
+isort = "^5.13.2"
+ipykernel = "^6.29.4"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

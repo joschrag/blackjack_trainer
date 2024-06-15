@@ -1,27 +1,28 @@
 import datetime
-import random
 
 import numpy as np
 import pandas as pd
 
 from basic_strategy import engine
 from basic_strategy.card_eval import card_eval
-from basic_strategy.hand import Card, Hand, deck
+from basic_strategy.hand import Hand
+from basic_strategy.mode_selector import deal_cards
 
-CARDS = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 ENDC = "\033[0m"
 OKGREEN = "\033[92m"
 FAIL = "\033[91m"
 if __name__ == "__main__":
-    user = input("Input your username:")
+    mode = input("Select your mode: ('split','soft','hard')(leave empty for basic)\n")
+    mode = mode or "basic"
+    user = input("Input your username:\n")
     while True:
-        dealt_cards = random.sample(deck, k=3)
+        dealt_cards = deal_cards(mode)
         hand, dealer = Hand(dealt_cards[0:2]), dealt_cards[2]
         print(
             f"Your hand: '{",".join([str(c) for c in hand.cards])}' | Dealer upcard: {dealer}"
         )
         choice = input("Your choice: ")
-        correct = card_eval(hand, dealer)
+        correct = card_eval(hand, dealer, mode)
         if choice == correct:
             print(f"{OKGREEN}success{ENDC}")
         else:
@@ -30,7 +31,7 @@ if __name__ == "__main__":
         df = pd.DataFrame(
             {
                 "user": pd.Series([user], dtype=pd.StringDtype()),
-                "training_type": pd.Series(["card_eval"], dtype=pd.StringDtype()),
+                "training_type": pd.Series([mode], dtype=pd.StringDtype()),
                 "was_correct": pd.Series([choice == correct], dtype=pd.BooleanDtype()),
                 "correct_move": pd.Series([correct], dtype=pd.StringDtype()),
                 "guessed_move": pd.Series([choice], dtype=pd.StringDtype()),

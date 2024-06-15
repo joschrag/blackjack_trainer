@@ -79,9 +79,10 @@ def should_double(hand: Hand, dealer: Card) -> str:
     return "o"
 
 
-def card_eval(hand: Hand, dealer: Card) -> str:
+def card_eval(hand: Hand, dealer: Card, mode: str) -> str:
     if can_surrender(hand, dealer):
         return "sur"
-    if s := should_split(hand, dealer):
-        return s
+    if mode not in ["soft", "hard"]:
+        if s := should_split(hand, dealer):
+            return s
     return should_double(hand, dealer)
