@@ -13,7 +13,7 @@ def deal_cards(mode: str) -> list[Card]:
         cards = random.sample(deck, k=2)
         return [cards[0], cards[0], cards[1]]
     if mode == "soft":
-        ranks = RANKS[:-4]
+        ranks = RANKS[:-5]
         deck = [Card(s, r) for s, r in itertools.product(SUITS, ranks)]
         cards = random.sample(deck, k=2)
         return [Card("s", "A"), cards[0], cards[1]]
