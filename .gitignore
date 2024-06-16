@@ -1,5 +1,5 @@
 .vscode
-db/
+db/db.sqlite
 poetry.lock
 
 # Byte-compiled / optimized / DLL files
