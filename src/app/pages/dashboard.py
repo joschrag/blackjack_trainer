@@ -10,9 +10,33 @@ dash.register_page(
     title="Blackjack Trainer Dashboard",
     description="Landing page.",
 )
-user_switch = dmc.Switch("separate users", id="user_switch", size="md", radius="xl", color="ff0000")
-mode_switch = dmc.Switch("separate modes", id="mode_switch", size="md", radius="xl", color="ff0000")
-move_switch = dmc.Switch("separate moves", id="move_switch", size="md", radius="xl", color="ff0000")
+user_switch = dmc.Switch(
+    "separate users",
+    id="user_switch",
+    size="md",
+    radius="xl",
+    color="ff0000",
+    persistence=True,
+    persistence_type="session",
+)
+mode_switch = dmc.Switch(
+    "separate modes",
+    id="mode_switch",
+    size="md",
+    radius="xl",
+    color="ff0000",
+    persistence=True,
+    persistence_type="session",
+)
+move_switch = dmc.Switch(
+    "separate moves",
+    id="move_switch",
+    size="md",
+    radius="xl",
+    color="ff0000",
+    persistence=True,
+    persistence_type="session",
+)
 abs_val_dd = dcc.Dropdown(
     ["absolute values", "percentages"],
     ["absolute values"],
