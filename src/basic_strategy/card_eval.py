@@ -1,6 +1,6 @@
 from typing import Optional
 
-from basic_strategy.hand import Card, Hand
+from src.basic_strategy.hand import Card, Hand
 
 
 def can_surrender(hand: Hand, dealer: Card) -> bool:
@@ -14,15 +14,9 @@ def can_surrender(hand: Hand, dealer: Card) -> bool:
 def should_split(hand: Hand, dealer: Card) -> Optional[str]:
     if hand.cards[0].value != hand.cards[1].value:
         return None
-    if (
-        hand.cards[0].value == hand.cards[1].value == 11
-        or hand.cards[0].value == hand.cards[1].value == 8
-    ):
+    if hand.cards[0].value == hand.cards[1].value == 11 or hand.cards[0].value == hand.cards[1].value == 8:
         return "spl"
-    if (
-        hand.cards[0].value == hand.cards[1].value == 10
-        or hand.cards[0].value == hand.cards[1].value == 5
-    ):
+    if hand.cards[0].value == hand.cards[1].value == 10 or hand.cards[0].value == hand.cards[1].value == 5:
         return None
     if hand.cards[0].value == hand.cards[1].value == 9:
         return "spl" if dealer.value not in [7, 10, 11] else None
@@ -34,10 +28,7 @@ def should_split(hand: Hand, dealer: Card) -> Optional[str]:
         return "spl" if 2 < dealer.value < 7 else None
     if hand.cards[0].value == hand.cards[1].value == 4:
         return "das" if dealer.value in [5, 6] else None
-    if (
-        hand.cards[0].value == hand.cards[1].value == 3
-        or hand.cards[0].value == hand.cards[1].value == 2
-    ):
+    if hand.cards[0].value == hand.cards[1].value == 3 or hand.cards[0].value == hand.cards[1].value == 2:
         if dealer.value in [2, 3]:
             return "das"
         return "spl" if 3 < dealer.value <= 7 else None

@@ -1,21 +1,15 @@
 import pytest
 
-from basic_strategy import card_eval as bs
-from basic_strategy.hand import Card, Hand
+from src.basic_strategy import card_eval as bs
+from src.basic_strategy.hand import Card, Hand
 
 sur_list = [(16, 9), (16, 10), (16, 11), (15, 10)]
 SUIT = "s"
 
 
-@pytest.mark.parametrize(
-    "card1", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
-)
-@pytest.mark.parametrize(
-    "card2", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
-)
-@pytest.mark.parametrize(
-    "dealer_value", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
-)
+@pytest.mark.parametrize("card1", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
+@pytest.mark.parametrize("card2", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
+@pytest.mark.parametrize("dealer_value", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
 def test_can_surr(card1: str, card2: str, dealer_value: str):
     hand = Hand([Card(SUIT, card1), Card(SUIT, card2)])
     dealer = Card(SUIT, dealer_value)
@@ -29,12 +23,8 @@ def test_can_surr(card1: str, card2: str, dealer_value: str):
 das_list = [(6, 2), (4, 5), (4, 6), (3, 2), (3, 3), (2, 3), (2, 2)]
 
 
-@pytest.mark.parametrize(
-    "card1", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
-)
-@pytest.mark.parametrize(
-    "dealer_value", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
-)
+@pytest.mark.parametrize("card1", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
+@pytest.mark.parametrize("dealer_value", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
 def test_can_split(card1: str, dealer_value: str):
     dealer = Card(SUIT, dealer_value)
     split_dict = {
@@ -122,12 +112,8 @@ stand_list_soft = [
 ]
 
 
-@pytest.mark.parametrize(
-    "card2", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"]
-)
-@pytest.mark.parametrize(
-    "dealer_value", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
-)
+@pytest.mark.parametrize("card2", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"])
+@pytest.mark.parametrize("dealer_value", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
 def test_soft_double(card2: str, dealer_value: str):
     hand = Hand([Card(SUIT, "A"), Card(SUIT, card2)])
     dealer = Card(SUIT, dealer_value)
@@ -211,15 +197,9 @@ stand_list_hard = [
 ]
 
 
-@pytest.mark.parametrize(
-    "card1", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"]
-)
-@pytest.mark.parametrize(
-    "card2", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"]
-)
-@pytest.mark.parametrize(
-    "dealer_value", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
-)
+@pytest.mark.parametrize("card1", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"])
+@pytest.mark.parametrize("card2", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"])
+@pytest.mark.parametrize("dealer_value", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
 def test_hard_double(card1: str, card2: str, dealer_value: str):
     hand = Hand([Card(SUIT, card1), Card(SUIT, card2)])
     dealer = Card(SUIT, dealer_value)
