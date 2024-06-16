@@ -2,7 +2,7 @@ import datetime
 
 import pandas as pd
 
-from src.basic_strategy import engine
+from src import engine
 from src.basic_strategy.card_eval import card_eval
 from src.basic_strategy.hand import Hand
 from src.basic_strategy.mode_selector import deal_cards
@@ -24,7 +24,6 @@ if __name__ == "__main__":
             print(f"{OKGREEN}success{ENDC}")
         else:
             print(f"{FAIL}{correct}{ENDC}")
-        # TODO Add involved cards
         df = pd.DataFrame(
             {
                 "user": pd.Series([user], dtype=pd.StringDtype()),
