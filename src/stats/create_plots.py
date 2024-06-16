@@ -99,6 +99,7 @@ def plot_figure(
                                 y=df_p[data_col],
                                 marker={"color": COLOR_DICT[typ]},
                                 name=f"{typ}",
+                                hovertemplate=f"%{{y:.2f}} {val}",
                                 legendgroup=f"{typ}",
                                 showlegend=legend_dict_move[typ],
                             )
@@ -111,6 +112,7 @@ def plot_figure(
                             x=df_f["date"],
                             y=df_f[data_col],
                             name=f"{val}",
+                            hovertemplate="%{y:.2f}",
                             marker={"color": COLOR_DICT[f"{val}"]},
                             legendgroup=f"{val}",
                             showlegend=legend_dict[val],
