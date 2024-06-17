@@ -41,13 +41,17 @@ class Card:
     suit: str
     rank: str
     value: int
-    unicode: str
+    unicode_front: str
+    unicode_back: str = chr(0x1F0A0)
+    face_up: bool
 
-    def __init__(self, suit, rank) -> None:
+    def __init__(self, suit: str, rank: str, face_up: bool = True) -> None:
         self.suit = suit
         self.rank = rank
         self.value = CARD_VALS[rank]
-        self.unicode = chr(SUIT_UNICODE[suit] + RANK_UNICODE[rank])
+        self.face_up = face_up
+        self.unicode_front = chr(SUIT_UNICODE[suit] + RANK_UNICODE[rank])
+        self.unicode = self.display_card()
 
     def __str__(self) -> str:
         return f"<{self.rank}{self.suit}>"
@@ -55,12 +59,20 @@ class Card:
     def __repr__(self) -> str:
         return f"<{self.rank}{self.suit}>"
 
+    def display_card(self) -> str:
+        return self.unicode_front if self.face_up else self.unicode_back
+
+    def turn_card(self) -> None:
+        self.face_up = not self.face_up
+        self.unicode = self.display_card()
+
 
 class Hand:
     cards: list[Card]
 
     def __init__(self, cards: list[Card]) -> None:
-        self.cards = sorted(cards, key=lambda c: CARD_VALS[c.rank])
+        self.cards = cards
+        self.sorted_cards = sorted(cards, key=lambda c: CARD_VALS[c.rank])
         self.value = self.compute_value()
         self.card_str = [card.rank for card in self.cards]
 
@@ -68,7 +80,7 @@ class Hand:
         naive_val = sum([CARD_VALS[card.rank] for card in self.cards])
         aces = [card for card in self.cards if card.rank == "A"]
         if aces and naive_val > 21:
-            val = sum([CARD_VALS[card.rank] for card in self.cards[: -len(aces)]])
+            val = sum([CARD_VALS[card.rank] for card in self.sorted_cards[: -len(aces)]])
             if 21 - val > 11:
                 return val + 11 + len(aces) - 1
             return val + len(aces)
