@@ -39,7 +39,7 @@ move_switch = dmc.Switch(
 )
 abs_val_dd = dcc.Dropdown(
     ["absolute values", "percentages"],
-    ["absolute values"],
+    "absolute values",
     id="abs_val_dd",
     persistence=True,
     persistence_type="session",
