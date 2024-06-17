@@ -118,11 +118,11 @@ def test_soft_double(card2: str, dealer_value: str):
     hand = Hand([Card(SUIT, "A"), Card(SUIT, card2)])
     dealer = Card(SUIT, dealer_value)
     res = bs.should_double(hand, dealer)
-    if (hand.cards[0].value, dealer.value) in double_list_soft:
+    if (hand.sorted_cards[0].value, dealer.value) in double_list_soft:
         assert res == "d"
-    elif (hand.cards[0].value, dealer.value) in double_stand_list:
+    elif (hand.sorted_cards[0].value, dealer.value) in double_stand_list:
         assert res == "ds"
-    elif (hand.cards[0].value, dealer.value) in stand_list_soft:
+    elif (hand.sorted_cards[0].value, dealer.value) in stand_list_soft:
         assert res == "s"
     else:
         assert res == "h"
