@@ -47,8 +47,8 @@ abs_val_dd = dcc.Dropdown(
 user_dd = dcc.Dropdown(id="user_dd", multi=True, persistence=True, persistence_type="session")
 mode_dd = dcc.Dropdown(id="mode_dd", multi=True, persistence=True, persistence_type="session")
 move_dd = dcc.Dropdown(
-    ["s", "d", "ds", "spl", "surr", "das", "h"],
-    ["s", "d", "ds", "spl", "surr", "das", "h"],
+    ["s", "d", "ds", "spl", "sur", "das", "h"],
+    ["s", "d", "ds", "spl", "sur", "das", "h"],
     id="move_dd",
     multi=True,
     persistence=True,
