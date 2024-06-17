@@ -2,7 +2,7 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-from . import callbacks  # noqa: F401
+from . import game_callbacks, ui_callbacks  # noqa: F401
 
 app = dash.Dash(
     __name__,
