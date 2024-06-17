@@ -36,20 +36,20 @@ def should_split(hand: Hand, dealer: Card) -> Optional[str]:
 
 
 def should_double(hand: Hand, dealer: Card) -> str:
-    if "A" in hand.card_str:
-        if "9" in hand.card_str:
+    if "A" in hand.rank_str:
+        if "9" in hand.rank_str:
             return "s"
-        if "8" in hand.card_str:
+        if "8" in hand.rank_str:
             return "ds" if dealer.value == 6 else "s"
-        if "7" in hand.card_str:
+        if "7" in hand.rank_str:
             if dealer.value < 7:
                 return "ds"
             return "s" if dealer.value <= 8 else "h"
-        if "6" in hand.card_str:
+        if "6" in hand.rank_str:
             return "d" if 3 <= dealer.value < 7 else "h"
-        if "5" in hand.card_str or "4" in hand.card_str:
+        if "5" in hand.rank_str or "4" in hand.rank_str:
             return "d" if 4 <= dealer.value < 7 else "h"
-        if "3" in hand.card_str or "2" in hand.card_str:
+        if "3" in hand.rank_str or "2" in hand.rank_str:
             return "d" if 5 <= dealer.value < 7 else "h"
     if hand.value >= 17:
         return "s"
