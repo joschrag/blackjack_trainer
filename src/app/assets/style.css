@@ -72,12 +72,61 @@ a.active {
 }
 .player{
     position: absolute;
-    bottom: 5rem;
+    bottom: 2rem;
     margin: auto;
+    position: absolute; left: 50%; transform: translateX(-50%);
 }
 
-.player{
+.dealer{
     position: absolute;
     top: 2rem;
     margin: auto;
+    position: absolute; left: 50%; transform: translateX(-50%);
+}
+
+#button_row{
+    max-width: 80%;
+    margin: 2rem auto 3rem auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+button.gamebtn{
+    border: 2px solid;
+    padding: 1em 2em;
+    border-radius: 1rem;
+    transition: all ease-in-out 0.2s;
+}
+
+button.gamebtn:hover{
+    transform: scale(1.25);
+}
+
+button.gamebtn#d{
+    border-color:     rgba(0, 255, 0, 1);    ;
+    background-color: rgba(0, 255, 0, 0.5);
+}
+button.gamebtn#das{
+    border-color:rgba(93, 39, 3, 1);
+    background-color: rgba(93, 39, 3, 0.5);
+}
+button.gamebtn#ds{
+    border-color:rgba(0, 204, 255, 1);
+    background-color: rgba(0, 204, 255, 0.5);
+}
+button.gamebtn#h{
+    border-color:rgba(255, 0, 0, 1);
+    background-color: rgba(255, 0, 0, 0.5);
+}
+button.gamebtn#s{
+    border-color:rgba(51, 51, 255, 1);
+    background-color: rgba(51, 51, 255, 0.5);
+}
+button.gamebtn#sur{
+    border-color:rgba(204, 0, 204, 1);
+    background-color: rgba(204, 0, 204, 0.5);
+}
+button.gamebtn#spl{
+    border-color:rgba(255, 102, 0, 1);
+    background-color: rgba(255, 102, 0, 0.5);
 }
