@@ -5,7 +5,7 @@ import pandas as pd
 from src import engine
 from src.basic_strategy.card_eval import card_eval
 from src.basic_strategy.hand import Hand
-from src.basic_strategy.mode_selector import deal_cards
+from src.basic_strategy.mode_selector import deal_solo_cards
 
 ENDC = "\033[0m"
 OKGREEN = "\033[92m"
@@ -15,7 +15,7 @@ if __name__ == "__main__":
     mode = mode or "basic"
     user = input("Input your username:\n")
     while True:
-        dealt_cards = deal_cards(mode)
+        dealt_cards = deal_solo_cards(mode)
         hand, dealer = Hand(dealt_cards[0:2]), dealt_cards[2]
         print(f"Your hand: '{",".join([str(c) for c in hand.cards])}' | Dealer upcard: {dealer}")
         choice = input("Your choice: ")

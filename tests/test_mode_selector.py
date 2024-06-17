@@ -7,7 +7,7 @@ from src.basic_strategy.hand import Card
 @pytest.mark.repeat(10**3)
 @pytest.mark.parametrize("mode", ["basic", "soft", "hard", "split"])
 def test_mode_selector(mode: str):
-    cards = mode_selector.deal_cards(mode)
+    cards = mode_selector.deal_solo_cards(mode)
     assert isinstance(cards, (list, Card))
     if mode == "soft":
         assert cards[0].rank == "A" and 2 <= cards[1].value <= 9
