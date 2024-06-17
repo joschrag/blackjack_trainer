@@ -1,4 +1,5 @@
 import dash
+from dash import html
 
 dash.register_page(
     __name__,
@@ -8,4 +9,5 @@ dash.register_page(
     description="Landing page.",
 )
 
-layout: list = []
+
+layout: list = [html.Div([], id="bj-table")]
