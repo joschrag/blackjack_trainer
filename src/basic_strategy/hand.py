@@ -13,7 +13,7 @@ CARD_VALS: dict = {
     "K": 10,
     "A": 11,
 }
-
+SUITS: set = {"s", "h", "c", "d"}
 SUIT_UNICODE: dict = {
     "s": 0x1F0A0,
     "h": 0x1F0B0,
@@ -66,6 +66,12 @@ class Card:
         self.face_up = not self.face_up
         self.unicode = self.display_card()
 
+    @staticmethod
+    def from_string(card_str: str, face_up: bool = True) -> "Card":
+        if card_str[0] in CARD_VALS and card_str[1] in SUITS:
+            return Card(card_str[1], card_str[0], face_up)
+        raise KeyError(f"'{card_str}' is not a valid card string")
+
 
 class Hand:
     cards: list[Card]
@@ -74,7 +80,8 @@ class Hand:
         self.cards = cards
         self.sorted_cards = sorted(cards, key=lambda c: CARD_VALS[c.rank])
         self.value = self.compute_value()
-        self.card_str = [card.rank for card in self.cards]
+        self.rank_str = [card.rank for card in self.cards]
+        self.card_str = "".join([f"{card.rank}{card.suit}" for card in self.cards])
 
     def compute_value(self) -> int:
         naive_val = sum([CARD_VALS[card.rank] for card in self.cards])
@@ -85,3 +92,15 @@ class Hand:
                 return val + 11 + len(aces) - 1
             return val + len(aces)
         return naive_val
+
+    @staticmethod
+    def from_string(cards_in: str | list, face_up: list[bool] | str | list[str] = "") -> "Hand":
+        face_up = face_up if face_up is not None else [True] * (len(cards_in) // 2)
+        if isinstance(cards_in, str):
+            cards = [cards_in[0 + i : 2 + i] for i in range(0, len(cards_in), 2)]  # noqa: E203
+        else:
+            cards = cards_in
+        if isinstance(face_up, str):
+            face_up = list(face_up)
+        face_bool = map(bool, map(int, face_up))
+        return Hand([Card.from_string(card, up) for card, up in zip(cards, face_bool)])
