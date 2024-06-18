@@ -1,3 +1,5 @@
+"""This module initializes the database and contains the other submodules."""
+
 import pathlib
 
 import sqlalchemy as sa
