@@ -2,24 +2,33 @@
 
 import dash_bootstrap_components as dbc
 import pandas as pd
+import sqlalchemy as sa
 from dash import Input, Output, callback, dcc, html
 
-from src import engine
+from src import EXT_TABLE_DTYPES, TABLE_DTYPES, engine
 from src.stats.create_plots import main_plot
 
 
 @callback(Output("data_store", "data"), Input("1_min", "n_intervals"))
-def load_data(_: int) -> list:
+def load_data(_: int, engine: sa.engine.Engine = engine) -> list:
     """Load data from the database every 1 minute.
 
     Args:
         _ (int): trigger to execute function
+        engine (sa.engine.Engine, optional): Optional database engine. Defaults to engine.
 
     Returns:
         list: data read from database
     """
+    table = sa.Table("training_data", sa.MetaData(), autoload_with=engine)
+    stmt = sa.select(table)
     with engine.begin() as conn:
-        dataframe = pd.read_sql_table("training_data", conn).drop(columns=["index"])
+        dataframe = pd.read_sql(
+            stmt,
+            conn,
+            index_col="index",
+            dtype=TABLE_DTYPES,
+        )
     dataframe["date"] = dataframe["upload_time"].dt.date
     dataframe["count"] = 1
     dataframe["total"] = 1
@@ -129,7 +138,7 @@ def populate_user_dropdown(data: list) -> list:
         list: available user
     """
     if data:
-        dataframe = pd.DataFrame(data)
+        dataframe = pd.DataFrame(data).astype(EXT_TABLE_DTYPES)
         return dataframe.user.unique().tolist()
     return []
 
@@ -149,6 +158,6 @@ def populate_mode_dropdown(data: list):
         list: available modes
     """
     if data:
-        dataframe = pd.DataFrame(data)
+        dataframe = pd.DataFrame(data).astype(EXT_TABLE_DTYPES)
         return dataframe.training_type.unique().tolist()
     return []
