@@ -149,22 +149,21 @@ class Hand:
         return naive_val
 
     @staticmethod
-    def from_string(cards_in: str | list, face_up: list[bool] | str | list[str] = "") -> "Hand":
+    def from_string(hands: str | list, face_up: list[bool] | str | list[str] = "") -> "Hand":
         """Create a hand from a card string.
 
         Args:
-            cards_in (str | list): one or multiple chained card strings
+            hands (str | list): one or multiple chained card strings
             face_up (list[bool] | str | list[str], optional): Is each card face up? Defaults to "".
 
         Returns:
             Hand: Class instance
         """
-        face_up = face_up if face_up is not None else [True] * (len(cards_in) // 2)
-        if isinstance(cards_in, str):
-            cards = [cards_in[0 + i : 2 + i] for i in range(0, len(cards_in), 2)]  # noqa: E203
-        else:
-            cards = cards_in
+        face_up = face_up if face_up else [True] * (len(hands) // 2)
+        if isinstance(hands, str):
+            hands = [hands[0 + i : 2 + i] for i in range(0, len(hands), 2)]  # noqa: E203
         if isinstance(face_up, str):
             face_up = list(face_up)
         face_bool = map(bool, map(int, face_up))
-        return Hand([Card.from_string(card, up) for card, up in zip(cards, face_bool)])
+        cards = [Card.from_string(card, up) for card, up in zip(hands, face_bool)]
+        return Hand(cards)
