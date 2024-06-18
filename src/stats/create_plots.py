@@ -3,9 +3,10 @@
 from typing import Optional
 
 import pandas as pd
+import sqlalchemy as sa
 from plotly import graph_objects as go
 
-from src import engine
+from src import EXT_TABLE_DTYPES, TABLE_DTYPES, engine
 
 COLOR_DICT = {
     "d": "#00ff00",
@@ -26,8 +27,15 @@ def get_data() -> pd.DataFrame:
     Returns:
         pd.DataFrame: data from database
     """
+    table = sa.Table("training_data", sa.MetaData(), autoload_with=engine)
+    stmt = sa.select(table)
     with engine.begin() as conn:
-        dataframe = pd.read_sql_table("training_data", conn).drop(columns=["index"])
+        dataframe = pd.read_sql(
+            stmt,
+            conn,
+            index_col="index",
+            dtype=TABLE_DTYPES,
+        )
     dataframe["date"] = dataframe["upload_time"].dt.date
     dataframe["count"] = 1
     dataframe["total"] = 1
@@ -151,7 +159,7 @@ def plot_figure(
                                 y=df_p[data_col],
                                 marker={"color": COLOR_DICT[typ]},
                                 name=f"{typ}",
-                                hovertemplate=f"%{{y:.2f}} {val}",
+                                hovertemplate=f"%{{y:.4f}} {val}",
                                 legendgroup=f"{typ}",
                                 showlegend=legend_dict_move[typ],
                             )
@@ -164,7 +172,7 @@ def plot_figure(
                             x=df_f["date"],
                             y=df_f[data_col],
                             name=f"{val}",
-                            hovertemplate="%{y:.2f}",
+                            hovertemplate="%{y:.4f}",
                             marker={"color": COLOR_DICT[f"{val}"]},
                             legendgroup=f"{val}",
                             showlegend=legend_dict[val],
@@ -195,7 +203,7 @@ def main_plot(
         dict[str, dict[str, go.Figure]]: dict containing the users,modes and graphs.
     """
     if data:
-        dataframe = pd.DataFrame(data)
+        dataframe = pd.DataFrame(data).astype(EXT_TABLE_DTYPES)
     else:
         dataframe = get_data()
     dataframe = filter_data(dataframe, user_dd, mode_dd, move_dd)
