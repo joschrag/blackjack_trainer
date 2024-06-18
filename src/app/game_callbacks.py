@@ -5,7 +5,7 @@ import datetime
 import pandas as pd
 from dash import Input, Output, State, callback, ctx, html
 
-from src import engine
+from src import TABLE_DTYPES, engine
 from src.basic_strategy.card_eval import card_eval
 from src.basic_strategy.hand import Hand
 from src.basic_strategy.mode_selector import deal_solo_cards
@@ -102,6 +102,7 @@ COLOR_DICT = {
         "user": State("user_input", "value"),
         "mode": State("gamemode_dd", "value"),
     },
+    prevent_initial_callback=True,
 )
 def eval_action(_: list, n_clicks: int, data: list, user: str, mode: str) -> list[html.Button]:
     """Evaluate a chosen action against the basic strategy and display correct choice.
@@ -118,6 +119,8 @@ def eval_action(_: list, n_clicks: int, data: list, user: str, mode: str) -> lis
     Returns:
         list[html.Button]: correct choice
     """
+    if ctx.triggered_id == []:
+        return []
     if data:
         if ctx.triggered_id == "start_btn" and n_clicks:
             return []
@@ -137,10 +140,10 @@ def eval_action(_: list, n_clicks: int, data: list, user: str, mode: str) -> lis
                 "hand_value": pd.Series([player.value], dtype=pd.Int32Dtype()),
                 "dealer_card": pd.Series([dealer.cards[1].value], dtype=pd.Int32Dtype()),
                 "upload_time": pd.Series([datetime.datetime.now()], dtype="datetime64[ns]"),
-            }
-        )
+            },
+        ).astype(TABLE_DTYPES)
         with engine.begin() as conn:
-            df.to_sql("training_data", conn, if_exists="append")
+            df.to_sql("training_data", conn, if_exists="append", index=False)
         return [
             html.Button(
                 [MOVE_DICT[correct_action]],
