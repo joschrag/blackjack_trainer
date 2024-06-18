@@ -1,11 +1,13 @@
+"""This contains the training gameplay loop for the command line."""
+
 import datetime
 
 import pandas as pd
 
-from src import engine
+from src import TABLE_DTYPES, engine
 from src.basic_strategy.card_eval import card_eval
 from src.basic_strategy.hand import Hand
-from src.basic_strategy.mode_selector import deal_cards
+from src.basic_strategy.mode_selector import deal_solo_cards
 
 ENDC = "\033[0m"
 OKGREEN = "\033[92m"
@@ -15,7 +17,7 @@ if __name__ == "__main__":
     mode = mode or "basic"
     user = input("Input your username:\n")
     while True:
-        dealt_cards = deal_cards(mode)
+        dealt_cards = deal_solo_cards(mode)
         hand, dealer = Hand(dealt_cards[0:2]), dealt_cards[2]
         print(f"Your hand: '{",".join([str(c) for c in hand.cards])}' | Dealer upcard: {dealer}")
         choice = input("Your choice: ")
@@ -37,6 +39,6 @@ if __name__ == "__main__":
                 "dealer_card": pd.Series([dealer.value], dtype=pd.Int32Dtype()),
                 "upload_time": pd.Series([datetime.datetime.now()], dtype="datetime64[ns]"),
             }
-        )
+        ).astype(TABLE_DTYPES)
         with engine.begin() as conn:
-            df.to_sql("training_data", conn, if_exists="append")
+            df.to_sql("training_data", conn, if_exists="append", index=False)

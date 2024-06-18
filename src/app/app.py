@@ -1,8 +1,10 @@
+"""This script defines the dash app and its template layout."""
+
 import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-from . import callbacks  # noqa: F401
+from . import game_callbacks, ui_callbacks  # noqa: F401
 
 app = dash.Dash(
     __name__,
@@ -38,7 +40,6 @@ navbar = dbc.Navbar(
             pills=True,
         )
     ],
-    sticky="top",
     style={
         "padding-left": "10em",
         "padding-bottom": "3em",
@@ -53,8 +54,10 @@ app.layout = dbc.Container(
     children=[
         navbar,
         dbc.Row(html.Div(dash.page_container)),
+        dcc.Interval(id="1_min", interval=1000 * 60),
         dcc.Interval(id="10_min", interval=1000 * 10 * 60),
         dcc.Store("data_store", storage_type="session"),
+        dcc.Store("cards_store", storage_type="session"),
     ],
     className="dbc",
     fluid=True,
