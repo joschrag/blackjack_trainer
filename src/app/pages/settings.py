@@ -1,3 +1,5 @@
+"""This script defines the page layout for the /settings page."""
+
 import dash
 
 dash.register_page(

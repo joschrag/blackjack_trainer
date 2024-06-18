@@ -1,3 +1,5 @@
+"""This script contains the callbacks used in the app gameplay loop."""
+
 import datetime
 
 import pandas as pd
@@ -20,7 +22,18 @@ from .custom_html import html_hand
     State("user_input", "value"),
     prevent_initial_callback=True,
 )
-def blackjack_game_loop(n_clicks: int, mode: str, data: list, username: str) -> tuple[list, list]:
+def deal_and_save_cards(n_clicks: int, mode: str, data: list, username: str) -> tuple[list, list]:
+    """Deal cards and saves them in a store object.
+
+    Args:
+        n_clicks (int): click number of the deal button
+        mode (str): training mode (what deck is used?)
+        data (list): current card data
+        username (str): current user
+
+    Returns:
+        tuple[list, list]: html card objects, updated card data
+    """
     if username:
         if n_clicks:
             cards = deal_solo_cards(mode)
@@ -81,7 +94,8 @@ COLOR_DICT = {
             Input("s", "n_clicks"),
             Input("sur", "n_clicks"),
             Input("spl", "n_clicks"),
-        ]
+        ],
+        "n_clicks": Input("start_btn", "n_clicks"),
     },
     state={
         "data": State("cards_store", "data"),
@@ -89,8 +103,24 @@ COLOR_DICT = {
         "mode": State("gamemode_dd", "value"),
     },
 )
-def eval_action(_: list, data: list, user: str, mode: str):
+def eval_action(_: list, n_clicks: int, data: list, user: str, mode: str) -> list[html.Button]:
+    """Evaluate a chosen action against the basic strategy and display correct choice.
+
+    Also writes choices to database.
+
+    Args:
+        _ (list): buttons of basic strategy choices
+        n_clicks (int): click number of the deal button
+        data (list): current card data
+        user (str): current user
+        mode (str): selected training mode (affects evaluation)
+
+    Returns:
+        list[html.Button]: correct choice
+    """
     if data:
+        if ctx.triggered_id == "start_btn" and n_clicks:
+            return []
         chosen_action = ctx.triggered_id
         dataframe = pd.DataFrame(data)
         dealer, player = [Hand.from_string(row.hands, row.face_up) for _, row in dataframe.iterrows()]
