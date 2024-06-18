@@ -1,9 +1,20 @@
+"""This script contains functions to evaluate a blackjack hand."""
+
 from typing import Optional
 
 from src.basic_strategy.hand import Card, Hand
 
 
 def can_surrender(hand: Hand, dealer: Card) -> bool:
+    """Determine if the player should surrender.
+
+    Args:
+        hand (Hand): player cards
+        dealer (Card): dealer cards
+
+    Returns:
+        bool: should surrender?
+    """
     if hand.value == 16 and (9 <= dealer.value <= 11):
         return True
     if hand.value == 15 and dealer.value == 10:
@@ -12,6 +23,15 @@ def can_surrender(hand: Hand, dealer: Card) -> bool:
 
 
 def should_split(hand: Hand, dealer: Card) -> Optional[str]:
+    """Determine if the player should split.
+
+    Args:
+        hand (Hand): player cards
+        dealer (Card): dealer cards
+
+    Returns:
+        Optional[str]: None if player shouldnt split, "spl" if player should split, "das" if it depends on the rules.
+    """
     if hand.cards[0].value != hand.cards[1].value:
         return None
     if hand.cards[0].value == hand.cards[1].value == 11 or hand.cards[0].value == hand.cards[1].value == 8:
@@ -36,6 +56,15 @@ def should_split(hand: Hand, dealer: Card) -> Optional[str]:
 
 
 def should_double(hand: Hand, dealer: Card) -> str:
+    """Determine if the player should double.
+
+    Args:
+        hand (Hand): player cards
+        dealer (Card): dealer cards
+
+    Returns:
+        str: optimal action ("s" stand, "h" hit, "d" double or hit,"ds" double or stand)
+    """
     if "A" in hand.rank_str:
         if "9" in hand.rank_str:
             return "s"
@@ -71,6 +100,16 @@ def should_double(hand: Hand, dealer: Card) -> str:
 
 
 def card_eval(hand: Hand, dealer: Card, mode: str) -> str:
+    """Completely evaluate a blackjack hand using basic strategy.
+
+    Args:
+        hand (Hand): player hand
+        dealer (Card): dealer upcard
+        mode (str): evaluation mode
+
+    Returns:
+        str: optimal choice
+    """
     if can_surrender(hand, dealer):
         return "sur"
     if mode not in ["soft", "hard"]:

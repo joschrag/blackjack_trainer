@@ -1,3 +1,5 @@
+"""This script contains functions to deal cards and create card decks."""
+
 import itertools
 import random
 
@@ -8,6 +10,14 @@ RANKS = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]
 
 
 def deal_solo_cards(mode: str) -> list[Card]:
+    """Deal cards to a single player and the dealer.
+
+    Args:
+        mode (str): selected mode, influences which deck is created.
+
+    Returns:
+        list[Card]: dealt cards
+    """
     deck = [Card(s, r) for s, r in itertools.product(SUITS, RANKS)]
     if mode == "split":
         cards = random.sample(deck, k=3)
