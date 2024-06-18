@@ -4,7 +4,7 @@ import datetime
 
 import pandas as pd
 
-from src import engine
+from src import TABLE_DTYPES, engine
 from src.basic_strategy.card_eval import card_eval
 from src.basic_strategy.hand import Hand
 from src.basic_strategy.mode_selector import deal_solo_cards
@@ -39,6 +39,6 @@ if __name__ == "__main__":
                 "dealer_card": pd.Series([dealer.value], dtype=pd.Int32Dtype()),
                 "upload_time": pd.Series([datetime.datetime.now()], dtype="datetime64[ns]"),
             }
-        )
+        ).astype(TABLE_DTYPES)
         with engine.begin() as conn:
-            df.to_sql("training_data", conn, if_exists="append")
+            df.to_sql("training_data", conn, if_exists="append", index=False)
