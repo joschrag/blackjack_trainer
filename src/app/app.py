@@ -58,6 +58,7 @@ app.layout = dbc.Container(
         dcc.Interval(id="10_min", interval=1000 * 10 * 60),
         dcc.Store("data_store", storage_type="session"),
         dcc.Store("cards_store", storage_type="session"),
+        dcc.Store("settings_store", storage_type="session"),
     ],
     className="dbc",
     fluid=True,
