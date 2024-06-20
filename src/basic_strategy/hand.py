@@ -133,7 +133,7 @@ class Hand:
             self.is_pair = True
         else:
             self.is_pair = False
-        self.is_hard_value = not (self.is_pair and any([card.rank == "A" for card in self.cards]))
+        self.is_hard_value = not (self.is_pair or any([card.rank == "A" for card in self.cards]))
         self.value = self.compute_value()
         self.rank_str = [card.rank for card in self.cards]
         self.card_str = "".join([f"{card.rank}{card.suit}" for card in self.cards])
