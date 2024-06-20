@@ -130,3 +130,11 @@ button.gamebtn#spl{
     border-color:rgba(255, 102, 0, 1);
     background-color: rgba(255, 102, 0, 0.5);
 }
+
+#settings{
+    width: 80rem;
+    margin: auto;
+}
+.settingrow {
+    margin:2rem;
+}
