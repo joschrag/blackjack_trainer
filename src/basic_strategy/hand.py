@@ -129,6 +129,11 @@ class Hand:
         """
         self.cards = cards
         self.sorted_cards = sorted(cards, key=lambda c: CARD_VALS[c.rank])
+        if len(cards) == 2 and cards[0].value == cards[1].value:
+            self.is_pair = True
+        else:
+            self.is_pair = False
+        self.is_hard_value = not (self.is_pair and any([card.rank == "A" for card in self.cards]))
         self.value = self.compute_value()
         self.rank_str = [card.rank for card in self.cards]
         self.card_str = "".join([f"{card.rank}{card.suit}" for card in self.cards])
