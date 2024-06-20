@@ -9,6 +9,7 @@ from dash._callback_context import context_value
 from src.app import game_callbacks as gc
 from src.basic_strategy.card_eval import card_eval
 from src.basic_strategy.hand import Hand
+from tests.fixtures import setup_db  # noqa:F401
 
 
 @pytest.mark.parametrize("n_clicks", list(range(0, 10**4, 10**3)))
@@ -31,7 +32,10 @@ def test_cb_deal_and_save_cards(n_clicks: int, mode: str, card_data: list) -> No
 @pytest.mark.parametrize("mode", ["basic"])
 @pytest.mark.parametrize("dealer", [{"hands": "Kc9h", "face_up": "10"}])
 @pytest.mark.parametrize("player", [{"hands": "Kc9h", "face_up": "11"}])
-def test_cb_eval_action(btn_id: str, mode: str, dealer: dict, player: dict) -> None:
+def test_cb_eval_action(setup_db, mocker, btn_id: str, mode: str, dealer: dict, player: dict) -> None:  # noqa:F811
+    engine, _ = setup_db
+    mocker.patch("src.app.game_callbacks.engine", engine)
+
     def run_callback() -> list:
         context_value.set({"triggered_inputs": [{"prop_id": f"{btn_id}.n_clicks"}]})
         return gc.eval_action(
