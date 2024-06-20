@@ -14,7 +14,7 @@ def test_can_surr(card1: str, card2: str, dealer_value: str):
     hand = Hand([Card(SUIT, card1), Card(SUIT, card2)])
     dealer = Card(SUIT, dealer_value)
     res = bs.can_surrender(hand, dealer)
-    if (hand.value, dealer.value) in sur_list:
+    if (hand.value, dealer.value) in sur_list and hand.is_hard_value:
         assert res
     else:
         assert not res
