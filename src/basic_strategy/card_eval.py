@@ -15,10 +15,12 @@ def can_surrender(hand: Hand, dealer: Card) -> bool:
     Returns:
         bool: should surrender?
     """
-    if hand.value == 16 and (9 <= dealer.value <= 11):
-        return True
-    if hand.value == 15 and dealer.value == 10:
-        return True
+    if hand.is_hard_value:
+        if hand.value == 16 and (9 <= dealer.value <= 11):
+            return True
+        if hand.value == 15 and dealer.value == 10:
+            return True
+
     return False
 
 
