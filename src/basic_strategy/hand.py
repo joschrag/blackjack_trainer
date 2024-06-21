@@ -1,5 +1,7 @@
 """This script contains classes to represent blackjack objects."""
 
+import math
+
 import numpy as np
 
 CARD_VALS: dict = {
@@ -209,7 +211,8 @@ class Deck:
 
     def draw_to_hand(self, hand: Hand | None = None, num_cards: int = 1) -> Hand:
         if self.cur_cards.size < num_cards:
-            self.cur_cards = np.concat([self.cur_cards, np.random.permutation(self.cards)])
+            repeats = math.ceil(num_cards / self.cards.size)
+            self.cur_cards = np.concat([self.cur_cards, np.random.permutation(np.repeat(self.cards, repeats))])
         dealt_cards, self.cur_cards = np.split(self.cur_cards, [num_cards])
         if isinstance(hand, Hand):
             hand.add_cards(dealt_cards)
