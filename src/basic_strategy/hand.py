@@ -1,5 +1,7 @@
 """This script contains classes to represent blackjack objects."""
 
+import numpy as np
+
 CARD_VALS: dict = {
     "2": 2,
     "3": 3,
@@ -121,13 +123,13 @@ class Hand:
 
     cards: list[Card]
 
-    def __init__(self, cards: list[Card]) -> None:
+    def __init__(self, cards: list[Card] | np.ndarray) -> None:
         """Initialize a Hand object.
 
         Args:
             cards (list[Card]): Cards present in hand
         """
-        self.cards = cards
+        self.cards = list(cards)
         self.sorted_cards = sorted(cards, key=lambda c: CARD_VALS[c.rank])
         if len(cards) == 2 and cards[0].value == cards[1].value:
             self.is_pair = True
@@ -153,6 +155,18 @@ class Hand:
             return val + len(aces)
         return naive_val
 
+    def add_cards(self, cards: list[Card] | np.ndarray) -> None:
+        self.cards += list(cards)
+        self.sorted_cards = sorted(self.cards, key=lambda c: CARD_VALS[c.rank])
+        if len(cards) == 2 and cards[0].value == cards[1].value:
+            self.is_pair = True
+        else:
+            self.is_pair = False
+        self.is_hard_value = not (self.is_pair or any([card.rank == "A" for card in self.cards]))
+        self.value = self.compute_value()
+        self.rank_str = [card.rank for card in self.cards]
+        self.card_str = "".join([f"{card.rank}{card.suit}" for card in self.cards])
+
     @staticmethod
     def from_string(hands: str | list, face_up: list[bool] | str | list[str] = "") -> "Hand":
         """Create a hand from a card string.
@@ -172,3 +186,22 @@ class Hand:
         face_bool = map(bool, map(int, face_up))
         cards = [Card.from_string(card, up) for card, up in zip(hands, face_bool)]
         return Hand(cards)
+
+
+class Deck:
+    cards: np.ndarray
+    cur_cards: np.ndarray
+
+    def __init__(self, cards: list[Card]) -> None:
+        self.cards = np.array(cards)
+        self.cur_cards = np.random.permutation(self.cards)
+
+    def draw_to_hand(self, hand: Hand | None = None, num_cards: int = 1) -> Hand:
+        if self.cur_cards.size < num_cards:
+            self.cur_cards = np.concat([self.cur_cards, np.random.permutation(self.cards)])
+        dealt_cards, self.cur_cards = np.split(self.cur_cards, [num_cards])
+        if isinstance(hand, Hand):
+            hand.add_cards(dealt_cards)
+            return hand
+        else:
+            return Hand(dealt_cards)
