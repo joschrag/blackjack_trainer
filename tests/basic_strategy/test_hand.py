@@ -22,7 +22,7 @@ def test_hand_from_string(cards: str, value: int):
 
 
 @pytest.mark.parametrize(
-    "cards,value",
+    "cards,value,pair,hard",
     zip(
         [
             [Card("s", "4")],
@@ -32,11 +32,52 @@ def test_hand_from_string(cards: str, value: int):
             [Card("s", "A"), Card("h", "Q"), Card("d", "A"), Card("s", "2")],
         ],
         [4, 21, 12, 16, 14],
+        [False, False, True, False, False],
+        [True, True, False, False, True],
     ),
 )
-def test_init_hand(cards: list[Card], value: int):
+def test_init_hand(cards: list[Card], value: int, pair: bool, hard: bool):
     hand = Hand(cards)
     assert hand.value == value
+    assert hand.is_pair == pair
+    assert hand.is_hard_value == hard
+
+
+@pytest.mark.parametrize(
+    ["hand_cards", "add_cards"],
+    zip(
+        [
+            [],
+            [Card("s", "4")],
+            [Card("s", "4"), Card("d", "7"), Card("c", "K")],
+            [Card("s", "A"), Card("s", "A")],
+            [Card("s", "A"), Card("s", "4"), Card("s", "A")],
+            [Card("s", "A"), Card("h", "Q"), Card("d", "A"), Card("s", "2")],
+            [Card("s", "4")],
+            [Card("s", "4"), Card("d", "7"), Card("c", "K")],
+            [Card("s", "A"), Card("s", "A")],
+            [Card("s", "A"), Card("s", "4"), Card("s", "A")],
+            [],
+        ],
+        [
+            [],
+            [Card("s", "4")],
+            [Card("s", "4"), Card("d", "7"), Card("c", "K")],
+            [Card("s", "A"), Card("s", "A")],
+            [Card("s", "A"), Card("s", "4"), Card("s", "A")],
+            [Card("s", "4")],
+            [],
+            [Card("s", "A"), Card("s", "A")],
+            [Card("s", "A"), Card("s", "4"), Card("s", "A")],
+            [Card("s", "A"), Card("h", "Q"), Card("d", "A"), Card("s", "2")],
+            [Card("s", "A"), Card("s", "4"), Card("s", "A")],
+        ],
+    ),
+)
+def test_add_card(hand_cards: list[Card], add_cards: list[Card]) -> None:
+    hand = Hand(hand_cards)
+    hand.add_cards(add_cards)
+    assert hand == Hand(hand_cards + add_cards)
 
 
 @pytest.mark.parametrize(
