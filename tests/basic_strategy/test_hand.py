@@ -1,6 +1,9 @@
+import itertools
+from collections import Counter
+
 import pytest
 
-from src.basic_strategy.hand import Card, Hand
+from src.basic_strategy.hand import Card, Deck, Hand
 
 
 @pytest.mark.parametrize(
@@ -106,3 +109,39 @@ def test_card_from_string(rank: str, suit: str, value: int):
     card = Card.from_string(card_str)
     assert card.rank == rank
     assert card.suit == suit
+
+
+@pytest.mark.parametrize("suits", [["h", "c", "s", "d"], ["h"], ["c", "s"]])
+@pytest.mark.parametrize(
+    "ranks",
+    [
+        ["J", "A"],
+        ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"],
+        ["2", "7", "8", "9", "T", "J", "Q", "K", "A"],
+        ["2"],
+    ],
+)
+def test_deck(suits: list[str], ranks: list[str]) -> None:
+    deck_cards = [Card(s, r) for s, r in itertools.product(suits, ranks)]
+    deck = Deck(deck_cards)
+    assert deck.cards.size == deck.cur_cards.size == len(deck_cards)
+
+
+@pytest.mark.parametrize("suits", [["h", "c", "s", "d"], ["h"], ["c", "s"]])
+@pytest.mark.parametrize(
+    "ranks",
+    [
+        ["J", "A"],
+        ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"],
+        ["2", "7", "8", "9", "T", "J", "Q", "K", "A"],
+        ["2"],
+    ],
+)
+@pytest.mark.parametrize("num_cards", [1, 5, 52, 245, 12])
+def test_deck_deal_cards(suits: list[str], ranks: list[str], num_cards: int) -> None:
+    deck_cards = [Card(s, r) for s, r in itertools.product(suits, ranks)]
+    deck = Deck(deck_cards)
+    old_cards = deck.cur_cards
+    hand = deck.draw_to_hand(num_cards=num_cards)
+    max_comp_ind = min(old_cards.size, num_cards)
+    assert Counter(hand.cards[:max_comp_ind]) == Counter(old_cards[:max_comp_ind])
