@@ -135,10 +135,19 @@ class Hand:
             self.is_pair = True
         else:
             self.is_pair = False
-        self.is_hard_value = not (self.is_pair or any([card.rank == "A" for card in self.cards]))
+        self.is_hard_value = not self.is_pair
         self.value = self.compute_value()
         self.rank_str = [card.rank for card in self.cards]
         self.card_str = "".join([f"{card.rank}{card.suit}" for card in self.cards])
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Hand):
+            return False
+        sorted_cards = self.sorted_cards == other.sorted_cards
+        is_pair = self.is_pair == other.is_pair
+        is_hard_value = self.is_hard_value == other.is_hard_value
+        value = self.value == other.value
+        return all([sorted_cards, is_pair, is_hard_value, value])
 
     def compute_value(self) -> int:
         """Compute the hand value.
@@ -151,18 +160,20 @@ class Hand:
         if aces and naive_val > 21:
             val = sum([CARD_VALS[card.rank] for card in self.sorted_cards[: -len(aces)]])
             if 21 - val > 11:
+                self.is_hard_value = False
                 return val + 11 + len(aces) - 1
+            self.is_hard_value = not self.is_pair
             return val + len(aces)
         return naive_val
 
     def add_cards(self, cards: list[Card] | np.ndarray) -> None:
         self.cards += list(cards)
         self.sorted_cards = sorted(self.cards, key=lambda c: CARD_VALS[c.rank])
-        if len(cards) == 2 and cards[0].value == cards[1].value:
+        if len(self.cards) == 2 and self.cards[0].value == self.cards[1].value:
             self.is_pair = True
         else:
             self.is_pair = False
-        self.is_hard_value = not (self.is_pair or any([card.rank == "A" for card in self.cards]))
+        self.is_hard_value = not self.is_pair
         self.value = self.compute_value()
         self.rank_str = [card.rank for card in self.cards]
         self.card_str = "".join([f"{card.rank}{card.suit}" for card in self.cards])
