@@ -33,10 +33,12 @@ def test_hand_from_string(cards: str, value: int):
             [Card("s", "A"), Card("s", "A")],
             [Card("s", "A"), Card("s", "4"), Card("s", "A")],
             [Card("s", "A"), Card("h", "Q"), Card("d", "A"), Card("s", "2")],
+            [Card("s", "A"), Card("h", "5")],
+            [Card("s", "4"), Card("h", "A")],
         ],
-        [4, 21, 12, 16, 14],
-        [False, False, True, False, False],
-        [True, True, False, False, True],
+        [4, 21, 12, 16, 14, 16, 15],
+        [False, False, True, False, False, False, False],
+        [True, True, False, False, True, False, False],
     ),
 )
 def test_init_hand(cards: list[Card], value: int, pair: bool, hard: bool):
