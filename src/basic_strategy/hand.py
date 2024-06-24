@@ -159,13 +159,15 @@ class Hand:
         """
         naive_val = sum([CARD_VALS[card.rank] for card in self.cards])
         aces = [card for card in self.cards if card.rank == "A"]
-        if aces and naive_val > 21:
-            val = sum([CARD_VALS[card.rank] for card in self.sorted_cards[: -len(aces)]])
-            if 21 - val > 11:
-                self.is_hard_value = False
-                return val + 11 + len(aces) - 1
-            self.is_hard_value = not self.is_pair
-            return val + len(aces)
+        if aces:
+            if naive_val > 21:
+                val = sum([CARD_VALS[card.rank] for card in self.sorted_cards[: -len(aces)]])
+                if 21 - val > 11:
+                    self.is_hard_value = False
+                    return val + 11 + len(aces) - 1
+                self.is_hard_value = not self.is_pair
+                return val + len(aces)
+            self.is_hard_value = False
         return naive_val
 
     def add_cards(self, cards: list[Card] | np.ndarray) -> None:
