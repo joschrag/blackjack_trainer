@@ -212,3 +212,49 @@ def test_hard_double(card1: str, card2: str, dealer_value: str):
         assert res == "s"
     else:
         assert res == "h"
+
+
+@pytest.mark.parametrize("card1", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
+@pytest.mark.parametrize("card2", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
+@pytest.mark.parametrize("dealer_card", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
+def test_card_eval(card1: str, card2: str, dealer_card: str) -> None:
+    hand = Hand([Card(SUIT, card1), Card(SUIT, card2)])
+    dealer = Card(SUIT, dealer_card)
+    split_dict = {
+        11: True,
+        10: False,
+        5: False,
+        8: True,
+        9: dealer.value not in [7, 10, 11],
+        7: dealer.value < 8,
+        6: 2 < dealer.value < 7,
+        4: False,
+        3: 3 < dealer.value < 8,
+        2: 3 < dealer.value < 8,
+    }
+    res = bs.card_eval(hand, dealer, "basic")
+    if hand.is_hard_value and (hand.value, dealer.value) in sur_list:
+        assert res == "sur"
+    elif hand.is_pair:
+        if split_dict[hand.cards[0].value]:
+            assert res == "spl"
+        elif (hand.cards[0].value, dealer.value) in das_list:
+            assert res == "das"
+    elif "A" in hand.rank_str:
+        if (hand.sorted_cards[0].value, dealer.value) in double_list_soft:
+            assert res == "d"
+        elif (hand.sorted_cards[0].value, dealer.value) in double_stand_list:
+            assert res == "ds"
+        elif (hand.sorted_cards[0].value, dealer.value) in stand_list_soft:
+            assert res == "s"
+        else:
+            assert res == "h"
+    else:
+        if hand.value > 17:
+            assert res == "s"
+        elif (hand.value, dealer.value) in double_list_hard:
+            assert res == "d"
+        elif (hand.value, dealer.value) in stand_list_hard:
+            assert res == "s"
+        else:
+            assert res == "h"
