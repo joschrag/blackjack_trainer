@@ -101,7 +101,7 @@ def should_double(hand: Hand, dealer: Card) -> str:
     return "o"
 
 
-def card_eval(hand: Hand, dealer: Card) -> str:
+def hand_eval(hand: Hand, dealer: Card) -> str:
     """Completely evaluate a blackjack hand using basic strategy.
 
     Args:

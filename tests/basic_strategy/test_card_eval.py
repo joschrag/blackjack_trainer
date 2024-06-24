@@ -11,6 +11,13 @@ SUIT = "s"
 @pytest.mark.parametrize("card2", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
 @pytest.mark.parametrize("dealer_value", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
 def test_can_surr(card1: str, card2: str, dealer_value: str):
+    """Test the detection of surrendering hands.
+
+    Args:
+        card1 (str): first hand card
+        card2 (str): second_hand_card
+        dealer_value (str): dealer upcard
+    """
     hand = Hand([Card(SUIT, card1), Card(SUIT, card2)])
     dealer = Card(SUIT, dealer_value)
     res = bs.can_surrender(hand, dealer)
@@ -26,6 +33,12 @@ das_list = [(6, 2), (4, 5), (4, 6), (3, 2), (3, 3), (2, 3), (2, 2)]
 @pytest.mark.parametrize("card1", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
 @pytest.mark.parametrize("dealer_value", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
 def test_can_split(card1: str, dealer_value: str):
+    """Test the detection for splitting hands.
+
+    Args:
+        card1 (str): Card of the pair
+        dealer_value (str): dealer upcard
+    """
     dealer = Card(SUIT, dealer_value)
     split_dict = {
         11: True,
@@ -115,6 +128,12 @@ stand_list_soft = [
 @pytest.mark.parametrize("card2", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"])
 @pytest.mark.parametrize("dealer_value", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
 def test_soft_double(card2: str, dealer_value: str):
+    """Test the handling of soft hand situations.
+
+    Args:
+        card2 (str): card besides the hand Ace
+        dealer_value (str): dealer upcard
+    """
     hand = Hand([Card(SUIT, "A"), Card(SUIT, card2)])
     dealer = Card(SUIT, dealer_value)
     res = bs.should_double(hand, dealer)
@@ -201,6 +220,13 @@ stand_list_hard = [
 @pytest.mark.parametrize("card2", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"])
 @pytest.mark.parametrize("dealer_value", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
 def test_hard_double(card1: str, card2: str, dealer_value: str):
+    """Test decision making for the hard total of a hand.
+
+    Args:
+        card1 (str): first hand card
+        card2 (str): second hand card
+        dealer_value (str): dealer upcard
+    """
     hand = Hand([Card(SUIT, card1), Card(SUIT, card2)])
     dealer = Card(SUIT, dealer_value)
     res = bs.should_double(hand, dealer)
@@ -217,7 +243,14 @@ def test_hard_double(card1: str, card2: str, dealer_value: str):
 @pytest.mark.parametrize("card1", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
 @pytest.mark.parametrize("card2", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
 @pytest.mark.parametrize("dealer_card", ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"])
-def test_card_eval(card1: str, card2: str, dealer_card: str) -> None:
+def test_hand_eval(card1: str, card2: str, dealer_card: str) -> None:
+    """Test complete decision making for a hand.
+
+    Args:
+        card1 (str): first hand card
+        card2 (str): second hand card
+        dealer_value (str): dealer upcard
+    """
     hand = Hand([Card(SUIT, card1), Card(SUIT, card2)])
     dealer = Card(SUIT, dealer_card)
     split_dict = {
@@ -232,7 +265,7 @@ def test_card_eval(card1: str, card2: str, dealer_card: str) -> None:
         3: 3 < dealer.value < 8,
         2: 3 < dealer.value < 8,
     }
-    res = bs.card_eval(hand, dealer, "basic")
+    res = bs.hand_eval(hand, dealer)
     if hand.is_hard_value and (hand.value, dealer.value) in sur_list:
         assert res == "sur"
     elif hand.is_pair:
