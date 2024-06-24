@@ -101,7 +101,7 @@ def should_double(hand: Hand, dealer: Card) -> str:
     return "o"
 
 
-def card_eval(hand: Hand, dealer: Card, mode: str) -> str:
+def card_eval(hand: Hand, dealer: Card) -> str:
     """Completely evaluate a blackjack hand using basic strategy.
 
     Args:
@@ -114,7 +114,6 @@ def card_eval(hand: Hand, dealer: Card, mode: str) -> str:
     """
     if can_surrender(hand, dealer):
         return "sur"
-    if mode not in ["soft", "hard"]:
-        if s := should_split(hand, dealer):
-            return s
+    if s := should_split(hand, dealer):
+        return s
     return should_double(hand, dealer)
