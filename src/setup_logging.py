@@ -3,6 +3,7 @@ import logging
 import logging.config
 import logging.handlers
 import pathlib
+from typing import override
 
 import yaml
 
@@ -17,3 +18,9 @@ def setup_logging():
     if queue_handler is not None:
         queue_handler.listener.start()
         atexit.register(queue_handler.listener.stop)
+
+
+class NonErrorFilter(logging.Filter):
+    @override
+    def filter(self, record: logging.LogRecord) -> bool | logging.LogRecord:
+        return record.levelno <= logging.INFO
