@@ -5,11 +5,14 @@ import pathlib
 import pandas as pd
 import sqlalchemy as sa
 
+from .setup_logging import setup_logging
+
 db_file = pathlib.Path.cwd() / "db" / "db.sqlite"
 if not db_file.exists():
     db_file.touch()
 engine = sa.create_engine("sqlite:///db/db.sqlite")
 
+setup_logging()
 
 STANDARD_SETTINGS = pd.DataFrame(
     {
