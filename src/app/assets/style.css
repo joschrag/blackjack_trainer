@@ -30,14 +30,17 @@ a.active {
     transform: scale(1.25);
 }
 
-#bj-table {
+.bj-table {
     display: block;
     position: relative;
     background-color: green;
     opacity: 0.7;
-    min-width: 80rem;
-    min-height: 35rem;
+    min-width: 80%;
+    max-width: 80%;
+    min-height: 30rem;
+    max-height: 50%;
     border-radius: 3rem;
+    margin:auto;
 }
 .hand {
     display:inline-block;
@@ -84,11 +87,18 @@ a.active {
     position: absolute; left: 50%; transform: translateX(-50%);
 }
 
-#button_row{
+.button_row{
     max-width: 80%;
     margin: 2rem auto 3rem auto;
     display: flex;
     justify-content: space-between;
+}
+
+#bet_col{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
 }
 
 button.gamebtn{
@@ -131,10 +141,22 @@ button.gamebtn#spl{
     background-color: rgba(255, 102, 0, 0.5);
 }
 
+#bj-tabs {
+    padding: 2rem;
+}
+
 #settings{
     width: 80rem;
     margin: auto;
 }
 .settingrow {
     margin:2rem;
+}
+#chips_display {
+    display: flex;
+    color: green;
+    justify-content: center;
+    align-items: center;
+    margin-left: auto;
+    margin-top: 2rem;
 }
