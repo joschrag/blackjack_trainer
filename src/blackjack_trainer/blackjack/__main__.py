@@ -4,10 +4,10 @@ import datetime
 
 import pandas as pd
 
-from src import TABLE_DTYPES, engine
-from src.blackjack.card_eval import hand_eval
-from src.blackjack.hand import Hand
-from src.blackjack.mode_selector import deal_solo_cards
+from blackjack_trainer import TABLE_DTYPES, engine
+from blackjack_trainer.blackjack.card_eval import hand_eval
+from blackjack_trainer.blackjack.hand import Hand
+from blackjack_trainer.blackjack.mode_selector import deal_solo_cards
 
 ENDC = "\033[0m"
 OKGREEN = "\033[92m"

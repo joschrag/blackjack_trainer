@@ -2,7 +2,7 @@
 
 from dash import html
 
-from src.blackjack.hand import Hand
+from blackjack_trainer.blackjack.hand import Hand
 
 COLOUR_DICT = {"h": "red", "d": "red", "c": "black", "s": "black"}
 CSS_CLASS_DICT = {0: "dealer", 1: "player"}

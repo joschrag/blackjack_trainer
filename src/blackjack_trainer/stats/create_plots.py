@@ -6,7 +6,7 @@ import pandas as pd
 import sqlalchemy as sa
 from plotly import graph_objects as go
 
-from src import EXT_TABLE_DTYPES, TABLE_DTYPES, engine
+from blackjack_trainer import EXT_TABLE_DTYPES, TABLE_DTYPES, engine
 
 COLOR_DICT = {
     "d": "#00ff00",

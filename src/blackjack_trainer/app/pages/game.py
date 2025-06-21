@@ -4,7 +4,7 @@ import dash
 import dash_bootstrap_components as dbc
 from dash import dcc, html
 
-from src.app import game_callbacks  # noqa: F401
+from blackjack_trainer.app import game_callbacks  # noqa: F401
 
 dash.register_page(
     __name__,

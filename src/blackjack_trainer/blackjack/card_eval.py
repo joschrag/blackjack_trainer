@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from src.blackjack.hand import Card, Hand
+from blackjack_trainer.blackjack.hand import Card, Hand
 
 
 def can_surrender(hand: Hand, dealer: Card) -> bool:

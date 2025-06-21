@@ -3,18 +3,16 @@
 import dash
 import dash_bootstrap_components as dbc
 import diskcache
-from dash import dcc, html
-from dash.long_callback import DiskcacheLongCallbackManager
+from dash import DiskcacheManager, dcc, html
 
 from . import game_callbacks, settings_callbacks, ui_callbacks  # noqa: F401
 
 cache = diskcache.Cache("./cache")
-long_callback_manager = DiskcacheLongCallbackManager(cache)
+long_callback_manager = DiskcacheManager(cache)
 app = dash.Dash(
     __name__,
     use_pages=True,
     external_stylesheets=[dbc.themes.MATERIA, "assets/style.css"],
-    # long_callback_manager=long_callback_manager,
 )
 nav_link_style = {
     "margin": "1em 1em",

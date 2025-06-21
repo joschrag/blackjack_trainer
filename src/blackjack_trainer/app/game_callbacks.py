@@ -12,10 +12,10 @@ import sqlalchemy as sa
 from dash import Input, Output, State, callback, ctx, html
 from dash_iconify import DashIconify
 
-from src import TABLE_DTYPES, engine
-from src.blackjack.card_eval import hand_eval
-from src.blackjack.hand import Card, Deck, Hand
-from src.blackjack.mode_selector import deal_solo_cards
+from blackjack_trainer import TABLE_DTYPES, engine
+from blackjack_trainer.blackjack.card_eval import hand_eval
+from blackjack_trainer.blackjack.hand import Card, Deck, Hand
+from blackjack_trainer.blackjack.mode_selector import deal_solo_cards
 
 from .custom_html import html_hand
 

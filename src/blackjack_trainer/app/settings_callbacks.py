@@ -2,7 +2,7 @@ import pandas as pd
 import sqlalchemy as sa
 from dash import Input, Output, State, callback, ctx
 
-from src import SETTING_DTYPES, engine
+from blackjack_trainer import SETTING_DTYPES, engine
 
 
 @callback(

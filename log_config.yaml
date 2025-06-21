@@ -9,7 +9,7 @@ formatters:
     datefmt: '%Y-%m-%dT%H:%M:%S%z'
 filters:
   no_errors:
-    (): setup_logging.NonErrorFilter
+    (): blackjack_trainer.NonErrorFilter
 handlers:
   stdout:
     class: logging.StreamHandler

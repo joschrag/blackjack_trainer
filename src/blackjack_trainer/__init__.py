@@ -5,7 +5,7 @@ import pathlib
 import pandas as pd
 import sqlalchemy as sa
 
-from .setup_logging import setup_logging
+from .setup_logging import NonErrorFilter, setup_logging  # noqa: F401
 
 db_file = pathlib.Path.cwd() / "db" / "db.sqlite"
 if not db_file.exists():
