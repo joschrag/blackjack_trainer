@@ -53,7 +53,7 @@ line-length = 119
 profile="black"
 
 [tool.pytest.ini_options]
-addopts = "-ra -q --webdriver Firefox"
+addopts = "-ra -q --webdriver Firefox --headless"
 testpaths = [
     "tests",
 ]
