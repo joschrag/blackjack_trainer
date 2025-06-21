@@ -4,8 +4,8 @@ import pandas as pd
 import pytest
 import sqlalchemy as sa
 
-from src import EXT_TABLE_DTYPES
-from src.app import ui_callbacks as ui
+from blackjack_trainer import EXT_TABLE_DTYPES
+from blackjack_trainer.app import ui_callbacks as ui
 from tests.fixtures import setup_db  # noqa:F401
 
 

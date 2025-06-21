@@ -1,7 +1,7 @@
 import pytest
 
-from src.blackjack import mode_selector
-from src.blackjack.hand import Card
+from blackjack_trainer.blackjack import mode_selector
+from blackjack_trainer.blackjack.hand import Card
 
 
 @pytest.mark.repeat(10**3)

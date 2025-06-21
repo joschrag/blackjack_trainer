@@ -3,7 +3,7 @@ from collections import Counter
 
 import pytest
 
-from src.blackjack.hand import Card, Deck, Hand
+from blackjack_trainer.blackjack.hand import Card, Deck, Hand
 
 
 @pytest.mark.parametrize(
