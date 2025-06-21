@@ -25,6 +25,7 @@ gamemode_dd = dcc.Dropdown(
 user_input = dcc.Input(
     type="text", placeholder="Enter your name", id="user_input", persistence=True, persistence_type="session"
 )
+confirm_button = html.Button("Enter User", id="user_btn", className="gamebtn")
 start_button = html.Button("Deal Cards", id="start_btn", className="gamebtn")
 correct_choice = html.Div(id="correct_choice")
 
@@ -35,23 +36,90 @@ hit_button = html.Button("hit (h)", id="h", className="gamebtn")
 stand_button = html.Button("stand (s)", id="s", className="gamebtn")
 das_button = html.Button("double after split (das)", id="das", className="gamebtn")
 split_button = html.Button("split (spl)", id="spl", className="gamebtn")
-
+bet_input = dcc.Input(
+    type="number",
+    min=1,
+    placeholder="Place your bet",
+    persistence=True,
+    persistence_type="session",
+    id="bet_chips",
+)
+chips_display = html.Div(id="chips_display")
 
 layout: list = [
     dbc.Row(
         [
             dbc.Col(user_input, width=2),
+            dbc.Col(confirm_button, width=2),
             dbc.Col(gamemode_dd, width=2),
             dbc.Col(correct_choice, width=2),
             dbc.Col(start_button, width=2),
         ],
-        id="button_row",
+        className="button_row",
     ),
-    html.Div([], id="bj-table"),
-    dbc.Row(
-        dbc.Col(
-            [surrender_button, doublestand_button, stand_button, hit_button, double_button, split_button, das_button],
-            id="button_row",
-        ),
+    dcc.Tabs(
+        [
+            dcc.Tab(
+                label="game",
+                children=[
+                    html.Div([], className="bj-table", id="bjt-game"),
+                    dbc.Row(
+                        [
+                            dbc.Col(
+                                [bet_input],
+                                width=2,
+                                id="bet_col",
+                            ),
+                            dbc.Col(
+                                [chips_display],
+                                width=1,
+                                id="chips_col",
+                            ),
+                            dbc.Col(
+                                [
+                                    surrender_button,
+                                    stand_button,
+                                    hit_button,
+                                    double_button,
+                                    split_button,
+                                ],
+                                width=5,
+                                className="button_row",
+                                id="action_col",
+                            ),
+                        ]
+                    ),
+                ],
+                id="game",
+                value="game",
+            ),
+            dcc.Tab(
+                label="train",
+                children=[
+                    html.Div([], className="bj-table", id="bjt-train"),
+                    dbc.Row(
+                        dbc.Col(
+                            [
+                                surrender_button,
+                                doublestand_button,
+                                stand_button,
+                                hit_button,
+                                double_button,
+                                split_button,
+                                das_button,
+                            ],
+                            className="button_row",
+                            id="action_col",
+                        ),
+                    ),
+                ],
+                id="train",
+                value="train",
+            ),
+        ],
+        id="bj-tabs",
+        value="game",
+        persistence=True,
+        persistence_type="session",
     ),
 ]

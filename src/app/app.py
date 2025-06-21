@@ -2,18 +2,23 @@
 
 import dash
 import dash_bootstrap_components as dbc
+import diskcache
 from dash import dcc, html
+from dash.long_callback import DiskcacheLongCallbackManager
 
 from . import game_callbacks, settings_callbacks, ui_callbacks  # noqa: F401
 
+cache = diskcache.Cache("./cache")
+long_callback_manager = DiskcacheLongCallbackManager(cache)
 app = dash.Dash(
     __name__,
     use_pages=True,
     external_stylesheets=[dbc.themes.MATERIA, "assets/style.css"],
+    # long_callback_manager=long_callback_manager,
 )
 nav_link_style = {
     "margin": "1em 1em",
-    "text-align": "center",
+    "textAlign": "center",
     "padding": "0.5em 2em",
 }
 
@@ -60,6 +65,9 @@ app.layout = dbc.Container(
         dcc.Store("cards_store_train", storage_type="session"),
         dcc.Store("cards_store_game", storage_type="session"),
         dcc.Store("settings_store", storage_type="session"),
+        dcc.Store("game_store", storage_type="session"),
+        dcc.Store("chips_store", storage_type="session"),
+        dcc.Store("deck_store", storage_type="session"),
     ],
     className="dbc",
     fluid=True,
