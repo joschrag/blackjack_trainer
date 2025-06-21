@@ -1,7 +1,7 @@
 import pytest
 
-from src.basic_strategy import card_eval as bs
-from src.basic_strategy.hand import Card, Hand
+from src.blackjack import card_eval as bs
+from src.blackjack.hand import Card, Hand
 
 sur_list = [(16, 9), (16, 10), (16, 11), (15, 10)]
 SUIT = "s"

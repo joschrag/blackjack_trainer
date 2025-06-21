@@ -3,7 +3,7 @@
 import itertools
 import random
 
-from src.basic_strategy.hand import Card
+from src.blackjack.hand import Card
 
 SUITS = ["h", "c", "s", "d"]
 RANKS = ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"]

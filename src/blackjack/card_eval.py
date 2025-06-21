@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from src.basic_strategy.hand import Card, Hand
+from src.blackjack.hand import Card, Hand
 
 
 def can_surrender(hand: Hand, dealer: Card) -> bool:

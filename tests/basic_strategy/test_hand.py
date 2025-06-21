@@ -3,7 +3,7 @@ from collections import Counter
 
 import pytest
 
-from src.basic_strategy.hand import Card, Deck, Hand
+from src.blackjack.hand import Card, Deck, Hand
 
 
 @pytest.mark.parametrize(

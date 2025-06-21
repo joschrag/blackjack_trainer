@@ -13,9 +13,9 @@ from dash import Input, Output, State, callback, ctx, html
 from dash_iconify import DashIconify
 
 from src import TABLE_DTYPES, engine
-from src.basic_strategy.card_eval import hand_eval
-from src.basic_strategy.hand import Card, Deck, Hand
-from src.basic_strategy.mode_selector import deal_solo_cards
+from src.blackjack.card_eval import hand_eval
+from src.blackjack.hand import Card, Deck, Hand
+from src.blackjack.mode_selector import deal_solo_cards
 
 from .custom_html import html_hand
 
