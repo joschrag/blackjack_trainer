@@ -211,7 +211,9 @@ class Deck:
         self.cards = np.array(cards)
         if cur_cards:
             assert all([card in self.cards for card in cur_cards])
-        self.cur_cards = np.array(cur_cards) or np.random.permutation(self.cards)
+            self.cur_cards = np.array(cur_cards)
+        else:
+            self.cur_cards = np.random.permutation(self.cards)
 
     def draw_to_hand(self, hand: Hand | None = None, num_cards: int = 1) -> Hand:
         if self.cur_cards.size < num_cards:
