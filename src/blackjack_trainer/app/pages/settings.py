@@ -37,7 +37,7 @@ split_dd = dcc.Dropdown(
     id="split_num_game",
 )
 split_label = html.Label("Can split Aces more than once")
-split_sw = dmc.Switch(offLabel="no", onLabel="yes", size="xl", id="split_game")
+split_sw = dmc.Switch(offLabel="no", onLabel="yes", size="xl", id="split_aces_game")
 shoe_label = html.Label("How many decks are played before shuffling?")
 shoesize_input = dcc.Input(1, type="number", min=1, max=10, id="shoe_size_game")
 shoesize_input_train = dcc.Input(1, type="number", min=1, max=10, id="shoe_size_train")

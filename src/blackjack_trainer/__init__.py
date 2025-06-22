@@ -22,7 +22,7 @@ STANDARD_SETTINGS = pd.DataFrame(
                 "shoe_game",
                 "das_game",
                 "split_aces",
-                "deal_soft",
+                "dealer_soft",
                 "split_game",
                 "double_game",
                 "shoe_train",
