@@ -24,7 +24,40 @@ def setup_db() -> Generator[tuple[sa.engine.Engine, pd.DataFrame], None, None]:
             "upload_time": pd.Series([datetime.datetime.now()] * 5, dtype="datetime64[ns]"),
         }
     )
+    STANDARD_SETTINGS = pd.DataFrame(
+        {
+            "setting": pd.Series(
+                [
+                    "auto_deal",
+                    "shoe_game",
+                    "das_game",
+                    "split_aces_game",
+                    "dealer_soft",
+                    "split_game",
+                    "double_game",
+                    "shoe_train",
+                    "das_train",
+                ],
+                dtype=pd.StringDtype(),
+            ),
+            "value": pd.Series(
+                [
+                    False,
+                    1,
+                    True,
+                    True,
+                    False,
+                    4,
+                    1,
+                    1,
+                    0,
+                ]
+            ),
+        }
+    )
+
     engine = sa.create_engine("sqlite://")
     with engine.begin() as conn:
         df.to_sql("training_data", conn, if_exists="append")
+        STANDARD_SETTINGS.to_sql("settings", conn, index=False)
     yield engine, df
