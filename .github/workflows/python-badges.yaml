@@ -1,0 +1,71 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+name: Pytest and linting badges
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Use a single Python version for badge generation to avoid multiple badges for the same metric
+        # You can still run tests against all versions, but only generate badges for one.
+        python-version: ["3.12"] # Choose a representative version for badge generation
+    steps:
+      - uses: browser-actions/setup-firefox@v1
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v3
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install genbadge[all] # Install genbadge with all extras for tests and coverage
+          python -m pip install poetry
+          poetry lock
+          poetry install --with dev
+          # Create a directory for reports if it doesn't exist
+          mkdir -p reports
+      - name: Lint with flake8 and generate report
+        run: |
+          # Run flake8 and pipe the output to a file
+          poetry run python -m flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics > reports/flake8-report.txt
+          poetry run python -m flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics >> reports/flake8-report.txt
+      - name: Generate Flake8 badge
+        run: |
+          genbadge flake8 -i reports/flake8-report.txt -o reports/flake8-badge.svg --name "flake8" --no-color-on-empty # Use --no-color-on-empty to prevent red on zero errors
+        continue-on-error: true # Allow the workflow to continue even if flake8 fails, so other badges can be generated.
+      - name: Test with pytest and generate coverage report
+        run: |
+          poetry run python -m pytest --cov --cov-branch --cov-report=xml
+      - name: Generate Pytest tests badge
+        run: |
+          genbadge tests -i reports/junit.xml -o reports/tests-badge.svg --name "tests"
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3 # Use the latest stable version
+        with:
+          path: reports/ # Path to the directory containing your badges
+  deploy:
+    # This job runs only when the build job is successful and on pushes to main
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write # Required to deploy to GitHub Pages
+      id-token: write # Required for OpenID Connect (OIDC) authentication
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4 # Use the latest stable version
