@@ -1,5 +1,7 @@
 """This script contains classes to represent blackjack objects."""
 
+from __future__ import annotations  # Compatibility of "|" Unions in python 3.9
+
 import math
 
 import numpy as np
@@ -102,7 +104,7 @@ class Card:
         self.unicode = self.display_card()
 
     @staticmethod
-    def from_string(card_str: str, face_up: bool = True) -> "Card":
+    def from_string(card_str: str, face_up: bool = True) -> Card:
         """Create a Card instance from a valid string.
 
         Args:
@@ -157,11 +159,11 @@ class Hand:
         Returns:
             int: hand value
         """
-        naive_val = sum([CARD_VALS[card.rank] for card in self.cards])
+        naive_val = sum(CARD_VALS[card.rank] for card in self.cards)
         aces = [card for card in self.cards if card.rank == "A"]
         if aces:
             if naive_val > 21:
-                val = sum([CARD_VALS[card.rank] for card in self.sorted_cards[: -len(aces)]])
+                val = sum(CARD_VALS[card.rank] for card in self.sorted_cards[: -len(aces)])
                 if 21 - val > 11:
                     self.is_hard_value = False
                     return val + 11 + len(aces) - 1
@@ -171,6 +173,11 @@ class Hand:
         return naive_val
 
     def add_cards(self, cards: list[Card] | np.ndarray) -> None:
+        """Add cards to the hand.
+
+        Args:
+            cards (list[Card] | np.ndarray): cards to add to the hand.
+        """
         self.cards += list(cards)
         self.sorted_cards = sorted(self.cards, key=lambda c: CARD_VALS[c.rank])
         if len(self.cards) == 2 and self.cards[0].value == self.cards[1].value:
@@ -183,7 +190,7 @@ class Hand:
         self.card_str = "".join([f"{card.rank}{card.suit}" for card in self.cards])
 
     @staticmethod
-    def from_string(hands: str | list, face_up: list[bool] | str | list[str] = "") -> "Hand":
+    def from_string(hands: str | list, face_up: list[bool] | str | list[str] = "") -> Hand:
         """Create a hand from a card string.
 
         Args:
@@ -223,5 +230,4 @@ class Deck:
         if isinstance(hand, Hand):
             hand.add_cards(dealt_cards)
             return hand
-        else:
-            return Hand(dealt_cards)
+        return Hand(dealt_cards)
