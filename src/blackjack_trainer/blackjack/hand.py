@@ -210,22 +210,35 @@ class Hand:
         return Hand(cards)
 
 
+# pylint: disable-next=too-few-public-methods
 class Deck:
+    """Class for representing a deck of cards."""
+
     cards: np.ndarray
     cur_cards: np.ndarray
 
     def __init__(self, cards: list[Card], cur_cards: list[Card] | None = None) -> None:
         self.cards = np.array(cards)
         if cur_cards:
-            assert all([card in self.cards for card in cur_cards])
+            assert all(card in self.cards for card in cur_cards)
             self.cur_cards = np.array(cur_cards)
         else:
             self.cur_cards = np.random.permutation(self.cards)
 
     def draw_to_hand(self, hand: Hand | None = None, num_cards: int = 1) -> Hand:
+        """Draw cards from deck into a Hand.
+
+        Args:
+            hand (Hand | None, optional): Hand to draw to. Defaults to None.
+            num_cards (int, optional): number of cards to draw. Defaults to 1.
+
+        Returns:
+            Hand: Hand with drawn cards
+        """
         if self.cur_cards.size < num_cards:
             repeats = math.ceil(num_cards / self.cards.size)
             self.cur_cards = np.concat([self.cur_cards, np.random.permutation(np.repeat(self.cards, repeats))])
+        # pylint: disable-next=unbalanced-tuple-unpacking
         dealt_cards, self.cur_cards = np.split(self.cur_cards, [num_cards])
         if isinstance(hand, Hand):
             hand.add_cards(dealt_cards)
