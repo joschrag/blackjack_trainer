@@ -1,18 +1,27 @@
 """This module initializes the database and contains the other submodules."""
 
 import pathlib
+import sys
 
 import pandas as pd
 import sqlalchemy as sa
 
-from .setup_logging import NonErrorFilter, setup_logging  # noqa: F401
+from .setup_logging import (  # noqa: F401
+    NonErrorFilter,
+    setup_logging,
+    setup_logging_3_11,
+)
 
 db_file = pathlib.Path.cwd() / "db" / "db.sqlite"
 if not db_file.exists():
     db_file.touch()
 engine = sa.create_engine("sqlite:///db/db.sqlite")
 
-setup_logging()
+# Check if the Python version is 3.9
+if sys.version_info.major == 3 and sys.version_info.minor == 9:
+    setup_logging_3_11()
+else:
+    setup_logging()
 
 STANDARD_SETTINGS = pd.DataFrame(
     {
