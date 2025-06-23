@@ -25,7 +25,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install genbadge[all] # Install genbadge with all extras for tests and coverage
+          pip install genbadge[tests,flake8] # Install genbadge
           python -m pip install poetry
           poetry lock
           poetry install --with dev
@@ -42,7 +42,7 @@ jobs:
         continue-on-error: true # Allow the workflow to continue even if flake8 fails, so other badges can be generated.
       - name: Test with pytest and generate coverage report
         run: |
-          poetry run python -m pytest --cov --cov-branch --cov-report=xml
+          poetry run python -m pytest --cov --cov-branch --cov-report=xml --junitxml=reports/junit/junit.xml
       - name: Generate Pytest tests badge
         run: |
           genbadge tests -i reports/junit.xml -o reports/tests-badge.svg --name "tests"
