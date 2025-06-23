@@ -1,19 +1,41 @@
-    # See https://pre-commit.com for more information
-    # See https://pre-commit.com/hooks.html for more hooks
-    repos:
-      - repo: https://github.com/ambv/black
-        rev: 24.4.2
-        hooks:
-          - id: black
-            language_version: python3.12
-      -   repo: https://github.com/PyCQA/flake8
-          rev: 7.1.0
-          hooks:
-          - id: flake8
-            language_version: python3.12
-      -   repo: https://github.com/pre-commit/mirrors-mypy
-          rev: 'v1.10.0'  # Use the sha / tag you want to point at
-          hooks:
-          -   id: mypy
-              language_version: python3.12
-              additional_dependencies: [types-PyYAML==6.0.12.*]
+# See https://pre-commit.com for more information
+fail_fast: false
+# See https://pre-commit.com/hooks.html for more hooks
+
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.27.2
+    hooks:
+      - id: gitleaks
+  - repo: https://github.com/asottile/pyupgrade
+    rev: v3.20.0
+    hooks:
+      - id: pyupgrade
+  - repo: https://github.com/ambv/black
+    rev: 25.1.0
+    hooks:
+      - id: black
+        language_version: python3.12
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.3.0
+    hooks:
+      - id: flake8
+        language_version: python3.12
+  - repo: local
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        types: [python]
+        args: ["--fail-under", "9.5"]
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: 'v1.16.1' # Use the sha / tag you want to point at
+    hooks:
+      - id: mypy
+        language_version: python3.12
+        additional_dependencies: [types-PyYAML==6.0.12.*]
+  - repo: https://github.com/google/yamlfmt
+    rev: v0.17.1
+    hooks:
+      - id: yamlfmt
