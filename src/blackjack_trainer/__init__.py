@@ -17,8 +17,8 @@ if not db_file.exists():
     db_file.touch()
 engine = sa.create_engine("sqlite:///db/db.sqlite")
 
-# Check if the Python version is 3.9
-if sys.version_info.major == 3 and sys.version_info.minor == 9:
+# Check if the Python version is 3.9 through 3.11
+if sys.version_info.major == 3 and sys.version_info.minor < 12:
     setup_logging_3_11()
 else:
     setup_logging()
