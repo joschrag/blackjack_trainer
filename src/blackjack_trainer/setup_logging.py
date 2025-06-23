@@ -11,8 +11,8 @@ import sys
 
 import yaml
 
-# Check if the Python version is 3.9
-if sys.version_info.major == 3 and sys.version_info.minor == 9:
+# Check if the Python version is older than 3.12
+if sys.version_info.major == 3 and sys.version_info.minor < 12:
     # pylint: disable-next=import-error
     from overrides import override
 else:
