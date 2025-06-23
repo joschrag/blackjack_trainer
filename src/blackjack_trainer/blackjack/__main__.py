@@ -17,7 +17,8 @@ if __name__ == "__main__":
     while True:
         dealt_cards = deal_solo_cards("basic")
         hand, dealer = Hand(dealt_cards[0:2]), dealt_cards[2]
-        print(f"Your hand: '{",".join([str(c) for c in hand.cards])}' | Dealer upcard: {dealer}")
+        hand_str = ",".join([str(c) for c in hand.cards])
+        print(f"Your hand: '{hand_str}' | Dealer upcard: {dealer}")
         choice = input("Your choice: ")
         correct = hand_eval(hand, dealer)
         if choice == correct:
