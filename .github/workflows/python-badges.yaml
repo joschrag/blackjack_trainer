@@ -31,6 +31,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install genbadge[tests,flake8] # Install genbadge
+          uv venv
           uv lock
           uv pip install --requirements pyproject.toml --all-extras
           # Create a directory for reports if it doesn't exist
