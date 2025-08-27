@@ -179,6 +179,9 @@ def plot_figure(
                         )
                     )
                     legend_dict[val] = False
+            start_date = pd.Timestamp.now() - pd.Timedelta(days=365)
+            end_date = pd.Timestamp.now() + pd.Timedelta(days=1)
+            fig.update_xaxes(type="date", range=[start_date, end_date])
             fig_dict[user][mode] = fig
     return fig_dict
 
