@@ -32,7 +32,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install genbadge[tests,flake8] # Install genbadge
           uv lock
-          uv pip install
+          uv pip install --requirements pyproject.toml --all-extras
           # Create a directory for reports if it doesn't exist
           mkdir -p reports
       - name: Lint with flake8 and generate report
