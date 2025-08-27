@@ -37,7 +37,7 @@ repos:
     hooks:
       - id: pylint
         name: pylint
-        entry: python -m pylint
+        entry: uv run python -m pylint
         language: system
         types: [python]
         args: ["--fail-under", "9.5"]
