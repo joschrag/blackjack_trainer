@@ -1,6 +1,9 @@
+import itertools
+from collections import Counter
+
 import pytest
 
-from src.basic_strategy.hand import Card, Hand
+from blackjack_trainer.blackjack.hand import Card, Deck, Hand
 
 
 @pytest.mark.parametrize(
@@ -17,12 +20,18 @@ from src.basic_strategy.hand import Card, Hand
     ),
 )
 def test_hand_from_string(cards: str, value: int):
+    """Test initializing Hand class from card string
+
+    Args:
+        cards (str): card strings
+        value (int): expected values
+    """
     hand = Hand.from_string(cards)
     assert hand.value == value
 
 
 @pytest.mark.parametrize(
-    "cards,value",
+    "cards,value,pair,hard",
     zip(
         [
             [Card("s", "4")],
@@ -30,13 +39,70 @@ def test_hand_from_string(cards: str, value: int):
             [Card("s", "A"), Card("s", "A")],
             [Card("s", "A"), Card("s", "4"), Card("s", "A")],
             [Card("s", "A"), Card("h", "Q"), Card("d", "A"), Card("s", "2")],
+            [Card("s", "A"), Card("h", "5")],
+            [Card("s", "4"), Card("h", "A")],
         ],
-        [4, 21, 12, 16, 14],
+        [4, 21, 12, 16, 14, 16, 15],
+        [False, False, True, False, False, False, False],
+        [True, True, False, False, True, False, False],
     ),
 )
-def test_init_hand(cards: list[Card], value: int):
+def test_init_hand(cards: list[Card], value: int, pair: bool, hard: bool):
+    """Test initializing the Hand class.
+
+    Args:
+        cards (list[Card]): hand cards
+        value (int): expected hand value
+        pair (bool): expected hand.is_pair value
+        hard (bool): expected hand.is_hard_value value
+    """
     hand = Hand(cards)
     assert hand.value == value
+    assert hand.is_pair == pair
+    assert hand.is_hard_value == hard
+
+
+@pytest.mark.parametrize(
+    ["hand_cards", "add_cards"],
+    zip(
+        [
+            [],
+            [Card("s", "4")],
+            [Card("s", "4"), Card("d", "7"), Card("c", "K")],
+            [Card("s", "A"), Card("s", "A")],
+            [Card("s", "A"), Card("s", "4"), Card("s", "A")],
+            [Card("s", "A"), Card("h", "Q"), Card("d", "A"), Card("s", "2")],
+            [Card("s", "4")],
+            [Card("s", "4"), Card("d", "7"), Card("c", "K")],
+            [Card("s", "A"), Card("s", "A")],
+            [Card("s", "A"), Card("s", "4"), Card("s", "A")],
+            [],
+        ],
+        [
+            [],
+            [Card("s", "4")],
+            [Card("s", "4"), Card("d", "7"), Card("c", "K")],
+            [Card("s", "A"), Card("s", "A")],
+            [Card("s", "A"), Card("s", "4"), Card("s", "A")],
+            [Card("s", "4")],
+            [],
+            [Card("s", "A"), Card("s", "A")],
+            [Card("s", "A"), Card("s", "4"), Card("s", "A")],
+            [Card("s", "A"), Card("h", "Q"), Card("d", "A"), Card("s", "2")],
+            [Card("s", "A"), Card("s", "4"), Card("s", "A")],
+        ],
+    ),
+)
+def test_add_card(hand_cards: list[Card], add_cards: list[Card]) -> None:
+    """Test adding cards to a hand.
+
+    Args:
+        hand_cards (list[Card]): cards in hand
+        add_cards (list[Card]): cards to add to hand
+    """
+    hand = Hand(hand_cards)
+    hand.add_cards(add_cards)
+    assert hand == Hand(hand_cards + add_cards)
 
 
 @pytest.mark.parametrize(
@@ -48,6 +114,13 @@ def test_init_hand(cards: list[Card], value: int):
 )
 @pytest.mark.parametrize("suit", ["s", "h", "c", "d"])
 def test_init_card(rank: str, suit: str, value: int):
+    """Test initalizing the Card class.
+
+    Args:
+        rank (str): card rank
+        suit (str): card suit
+        value (int): expected card value
+    """
     card = Card(suit, rank)
     assert card.value == value
 
@@ -61,7 +134,64 @@ def test_init_card(rank: str, suit: str, value: int):
 )
 @pytest.mark.parametrize("suit", ["s", "h", "c", "d"])
 def test_card_from_string(rank: str, suit: str, value: int):
+    """Test creating the card class from a card string.
+
+    Args:
+        rank (str): card rank
+        suit (str): card suit
+        value (int): expected card value
+    """
     card_str = f"{rank}{suit}"
     card = Card.from_string(card_str)
     assert card.rank == rank
     assert card.suit == suit
+    assert card.value == value
+
+
+@pytest.mark.parametrize("suits", [["h", "c", "s", "d"], ["h"], ["c", "s"]])
+@pytest.mark.parametrize(
+    "ranks",
+    [
+        ["J", "A"],
+        ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"],
+        ["2", "7", "8", "9", "T", "J", "Q", "K", "A"],
+        ["2"],
+    ],
+)
+def test_deck(suits: list[str], ranks: list[str]) -> None:
+    """Test creating  a deck off cards.
+
+    Args:
+        suits (list[str]): suits in deck
+        ranks (list[str]): ranks in deck
+    """
+    deck_cards = [Card(s, r) for s, r in itertools.product(suits, ranks)]
+    deck = Deck(deck_cards)
+    assert deck.cards.size == deck.cur_cards.size == len(deck_cards)
+
+
+@pytest.mark.parametrize("suits", [["h", "c", "s", "d"], ["h"], ["c", "s"]])
+@pytest.mark.parametrize(
+    "ranks",
+    [
+        ["J", "A"],
+        ["2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K", "A"],
+        ["2", "7", "8", "9", "T", "J", "Q", "K", "A"],
+        ["2"],
+    ],
+)
+@pytest.mark.parametrize("num_cards", [1, 5, 52, 245, 12])
+def test_deck_deal_cards(suits: list[str], ranks: list[str], num_cards: int) -> None:
+    """Test dealing cards from Deck class.
+
+    Args:
+        suits (list[str]): suits in deck
+        ranks (list[str]): ranks in deck
+        num_cards (int): number of cards to deal
+    """
+    deck_cards = [Card(s, r) for s, r in itertools.product(suits, ranks)]
+    deck = Deck(deck_cards)
+    old_cards = deck.cur_cards
+    hand = deck.draw_to_hand(num_cards=num_cards)
+    max_comp_ind = min(old_cards.size, num_cards)
+    assert Counter(hand.cards[:max_comp_ind]) == Counter(old_cards[:max_comp_ind])

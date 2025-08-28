@@ -4,24 +4,23 @@ import datetime
 
 import pandas as pd
 
-from src import TABLE_DTYPES, engine
-from src.basic_strategy.card_eval import card_eval
-from src.basic_strategy.hand import Hand
-from src.basic_strategy.mode_selector import deal_solo_cards
+from blackjack_trainer import TABLE_DTYPES, engine
+from blackjack_trainer.blackjack.card_eval import hand_eval
+from blackjack_trainer.blackjack.hand import Hand
+from blackjack_trainer.blackjack.mode_selector import deal_solo_cards
 
 ENDC = "\033[0m"
 OKGREEN = "\033[92m"
 FAIL = "\033[91m"
 if __name__ == "__main__":
-    mode = input("Select your mode: ('split','soft','hard')(leave empty for basic)\n")
-    mode = mode or "basic"
     user = input("Input your username:\n")
     while True:
-        dealt_cards = deal_solo_cards(mode)
+        dealt_cards = deal_solo_cards("basic")
         hand, dealer = Hand(dealt_cards[0:2]), dealt_cards[2]
-        print(f"Your hand: '{",".join([str(c) for c in hand.cards])}' | Dealer upcard: {dealer}")
+        hand_str = ",".join([str(c) for c in hand.cards])
+        print(f"Your hand: '{hand_str}' | Dealer upcard: {dealer}")
         choice = input("Your choice: ")
-        correct = card_eval(hand, dealer, mode)
+        correct = hand_eval(hand, dealer)
         if choice == correct:
             print(f"{OKGREEN}success{ENDC}")
         else:
@@ -29,7 +28,7 @@ if __name__ == "__main__":
         df = pd.DataFrame(
             {
                 "user": pd.Series([user], dtype=pd.StringDtype()),
-                "training_type": pd.Series([mode], dtype=pd.StringDtype()),
+                "training_type": pd.Series(["basic"], dtype=pd.StringDtype()),
                 "was_correct": pd.Series([choice == correct], dtype=pd.BooleanDtype()),
                 "correct_move": pd.Series([correct], dtype=pd.StringDtype()),
                 "guessed_move": pd.Series([choice], dtype=pd.StringDtype()),

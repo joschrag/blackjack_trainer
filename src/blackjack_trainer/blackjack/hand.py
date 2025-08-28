@@ -1,5 +1,11 @@
 """This script contains classes to represent blackjack objects."""
 
+from __future__ import annotations  # Compatibility of "|" Unions in python 3.9
+
+import math
+
+import numpy as np
+
 CARD_VALS: dict = {
     "2": 2,
     "3": 3,
@@ -98,7 +104,7 @@ class Card:
         self.unicode = self.display_card()
 
     @staticmethod
-    def from_string(card_str: str, face_up: bool = True) -> "Card":
+    def from_string(card_str: str, face_up: bool = True) -> Card:
         """Create a Card instance from a valid string.
 
         Args:
@@ -121,17 +127,31 @@ class Hand:
 
     cards: list[Card]
 
-    def __init__(self, cards: list[Card]) -> None:
+    def __init__(self, cards: list[Card] | np.ndarray) -> None:
         """Initialize a Hand object.
 
         Args:
             cards (list[Card]): Cards present in hand
         """
-        self.cards = cards
+        self.cards = list(cards)
         self.sorted_cards = sorted(cards, key=lambda c: CARD_VALS[c.rank])
+        if len(cards) == 2 and cards[0].value == cards[1].value:
+            self.is_pair = True
+        else:
+            self.is_pair = False
+        self.is_hard_value = not self.is_pair
         self.value = self.compute_value()
         self.rank_str = [card.rank for card in self.cards]
         self.card_str = "".join([f"{card.rank}{card.suit}" for card in self.cards])
+
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, Hand):
+            return False
+        sorted_cards = self.sorted_cards == other.sorted_cards
+        is_pair = self.is_pair == other.is_pair
+        is_hard_value = self.is_hard_value == other.is_hard_value
+        value = self.value == other.value
+        return all([sorted_cards, is_pair, is_hard_value, value])
 
     def compute_value(self) -> int:
         """Compute the hand value.
@@ -139,17 +159,38 @@ class Hand:
         Returns:
             int: hand value
         """
-        naive_val = sum([CARD_VALS[card.rank] for card in self.cards])
+        naive_val = sum(CARD_VALS[card.rank] for card in self.cards)
         aces = [card for card in self.cards if card.rank == "A"]
-        if aces and naive_val > 21:
-            val = sum([CARD_VALS[card.rank] for card in self.sorted_cards[: -len(aces)]])
-            if 21 - val > 11:
-                return val + 11 + len(aces) - 1
-            return val + len(aces)
+        if aces:
+            if naive_val > 21:
+                val = sum(CARD_VALS[card.rank] for card in self.sorted_cards[: -len(aces)])
+                if 21 - val > 11:
+                    self.is_hard_value = False
+                    return val + 11 + len(aces) - 1
+                self.is_hard_value = not self.is_pair
+                return val + len(aces)
+            self.is_hard_value = False
         return naive_val
 
+    def add_cards(self, cards: list[Card] | np.ndarray) -> None:
+        """Add cards to the hand.
+
+        Args:
+            cards (list[Card] | np.ndarray): cards to add to the hand.
+        """
+        self.cards += list(cards)
+        self.sorted_cards = sorted(self.cards, key=lambda c: CARD_VALS[c.rank])
+        if len(self.cards) == 2 and self.cards[0].value == self.cards[1].value:
+            self.is_pair = True
+        else:
+            self.is_pair = False
+        self.is_hard_value = not self.is_pair
+        self.value = self.compute_value()
+        self.rank_str = [card.rank for card in self.cards]
+        self.card_str = "".join([f"{card.rank}{card.suit}" for card in self.cards])
+
     @staticmethod
-    def from_string(hands: str | list, face_up: list[bool] | str | list[str] = "") -> "Hand":
+    def from_string(hands: str | list, face_up: list[bool] | str | list[str] = "") -> Hand:
         """Create a hand from a card string.
 
         Args:
@@ -167,3 +208,39 @@ class Hand:
         face_bool = map(bool, map(int, face_up))
         cards = [Card.from_string(card, up) for card, up in zip(hands, face_bool)]
         return Hand(cards)
+
+
+# pylint: disable-next=too-few-public-methods
+class Deck:
+    """Class for representing a deck of cards."""
+
+    cards: np.ndarray
+    cur_cards: np.ndarray
+
+    def __init__(self, cards: list[Card], cur_cards: list[Card] | None = None) -> None:
+        self.cards = np.array(cards)
+        if cur_cards:
+            assert all(card in self.cards for card in cur_cards)
+            self.cur_cards = np.array(cur_cards)
+        else:
+            self.cur_cards = np.random.permutation(self.cards)
+
+    def draw_to_hand(self, hand: Hand | None = None, num_cards: int = 1) -> Hand:
+        """Draw cards from deck into a Hand.
+
+        Args:
+            hand (Hand | None, optional): Hand to draw to. Defaults to None.
+            num_cards (int, optional): number of cards to draw. Defaults to 1.
+
+        Returns:
+            Hand: Hand with drawn cards
+        """
+        if self.cur_cards.size < num_cards:
+            repeats = math.ceil(num_cards / self.cards.size)
+            self.cur_cards = np.concat([self.cur_cards, np.random.permutation(np.repeat(self.cards, repeats))])
+        # pylint: disable-next=unbalanced-tuple-unpacking
+        dealt_cards, self.cur_cards = np.split(self.cur_cards, [num_cards])
+        if isinstance(hand, Hand):
+            hand.add_cards(dealt_cards)
+            return hand
+        return Hand(dealt_cards)

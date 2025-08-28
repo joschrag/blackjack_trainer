@@ -6,7 +6,7 @@ import pandas as pd
 import sqlalchemy as sa
 from plotly import graph_objects as go
 
-from src import EXT_TABLE_DTYPES, TABLE_DTYPES, engine
+from blackjack_trainer import EXT_TABLE_DTYPES, TABLE_DTYPES, engine
 
 COLOR_DICT = {
     "d": "#00ff00",
@@ -179,6 +179,9 @@ def plot_figure(
                         )
                     )
                     legend_dict[val] = False
+            start_date = pd.Timestamp.now() - pd.Timedelta(days=365)
+            end_date = pd.Timestamp.now() + pd.Timedelta(days=1)
+            fig.update_xaxes(type="date", range=[start_date, end_date])
             fig_dict[user][mode] = fig
     return fig_dict
 

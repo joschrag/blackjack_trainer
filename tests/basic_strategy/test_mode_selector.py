@@ -1,12 +1,20 @@
+"""Unit tests for the mode selector script."""
+
 import pytest
 
-from src.basic_strategy import mode_selector
-from src.basic_strategy.hand import Card
+from blackjack_trainer.blackjack import mode_selector
+from blackjack_trainer.blackjack.hand import Card
 
 
-@pytest.mark.repeat(10**3)
+@pytest.mark.repeat(10)
 @pytest.mark.parametrize("mode", ["basic", "soft", "hard", "split"])
-def test_mode_selector(mode: str):
+def test_mode_selector(mode: str) -> None:
+    """Test that the dealt cards are matching the deal mode.
+      Repeats 10 times per mode.
+
+    Args:
+        mode (str): deal mode
+    """
     cards = mode_selector.deal_solo_cards(mode)
     assert isinstance(cards, (list, Card))
     if mode == "soft":

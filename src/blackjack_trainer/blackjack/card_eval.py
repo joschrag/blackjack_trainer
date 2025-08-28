@@ -2,7 +2,7 @@
 
 from typing import Optional
 
-from src.basic_strategy.hand import Card, Hand
+from blackjack_trainer.blackjack.hand import Card, Hand
 
 
 def can_surrender(hand: Hand, dealer: Card) -> bool:
@@ -15,10 +15,12 @@ def can_surrender(hand: Hand, dealer: Card) -> bool:
     Returns:
         bool: should surrender?
     """
-    if hand.value == 16 and (9 <= dealer.value <= 11):
-        return True
-    if hand.value == 15 and dealer.value == 10:
-        return True
+    if hand.is_hard_value:
+        if hand.value == 16 and (9 <= dealer.value <= 11):
+            return True
+        if hand.value == 15 and dealer.value == 10:
+            return True
+
     return False
 
 
@@ -99,7 +101,7 @@ def should_double(hand: Hand, dealer: Card) -> str:
     return "o"
 
 
-def card_eval(hand: Hand, dealer: Card, mode: str) -> str:
+def hand_eval(hand: Hand, dealer: Card) -> str:
     """Completely evaluate a blackjack hand using basic strategy.
 
     Args:
@@ -112,7 +114,6 @@ def card_eval(hand: Hand, dealer: Card, mode: str) -> str:
     """
     if can_surrender(hand, dealer):
         return "sur"
-    if mode not in ["soft", "hard"]:
-        if s := should_split(hand, dealer):
-            return s
+    if s := should_split(hand, dealer):
+        return s
     return should_double(hand, dealer)

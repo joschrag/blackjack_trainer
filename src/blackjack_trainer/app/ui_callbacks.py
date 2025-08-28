@@ -5,8 +5,8 @@ import pandas as pd
 import sqlalchemy as sa
 from dash import Input, Output, callback, dcc, html
 
-from src import EXT_TABLE_DTYPES, TABLE_DTYPES, engine
-from src.stats.create_plots import main_plot
+from blackjack_trainer import EXT_TABLE_DTYPES, TABLE_DTYPES, engine
+from blackjack_trainer.stats.create_plots import main_plot
 
 
 @callback(Output("data_store", "data"), Input("1_min", "n_intervals"))
